@@ -56,25 +56,34 @@ class UsuariosController extends Controller
             if (!$this->validation($request->all())) {
                 $success = false;
                 return view('usuarios.create', compact('empresas','perfis', 'success'))->with('msg', $this->msg);
-            }            
+            }      
 
             //cria usuario
             $input = $request->all();
+    
+            if (!empty($request->input('cnpj_cpf'))) {
+                $input['id_fornecedor'] = $this->findFornecedor($request->input('cnpj_cpf'));
+            }
+    
             $input['password'] = Hash::make('ADMIN123');
             $input['usuario'] = Auth::user()->email;
             $input['data_criacao'] = date('Y-m-d H:i:s');
             $input['data_alteracao'] = date('Y-m-d H:i:s');
             $usuario = Usuarios::create($input);
 
+
             //acesso de empresas
-            if ($input['id_perfilusuario'] == 4) {
-                $fornecedor = Fornecedor::Where('cnpj_cpf', $input['cnpj_cpf'])->first();
-                $acesso[0]['id_usuario'] = $usuario->usuarioid;
-                $acesso[0]['id_empresa'] = $fornecedor->empresaid;
-            } else {
-                foreach ($input['id_empresa'] as $key => $value) {
-                    $acesso[$key]['id_usuario'] = $usuario->usuarioid;
-                    $acesso[$key]['id_empresa'] = $value;
+
+            if (!empty($input['id_empresa'])) {
+                if (!isset($input['id_fornecedor'])) {
+                    foreach ($input['id_empresa'] as $key => $empresaid) {
+                        $acesso[$key]['id_usuario'] = $usuario->usuarioid;
+                        $acesso[$key]['id_empresa'] = $empresaid;    
+                    }
+                } else {
+                    $fornecedor = Fornecedor::findOrFail($input['id_fornecedor']);
+                    $acesso[0]['id_usuario'] = $usuario->usuarioid;
+                    $acesso[0]['id_empresa'] = $fornecedor->empresaid;
                 }
             }
 
@@ -93,6 +102,16 @@ class UsuariosController extends Controller
         }
 
         return view('usuarios.create', compact('empresas','perfis'));
+    }
+
+    private function findFornecedor($cnpj)
+    {
+        $fornecedor = Fornecedor::where('cnpj_cpf', $this->numero($cnpj))->first();
+        return $fornecedor->id;
+    }
+
+    public function numero($str) {
+        return preg_replace("/[^0-9]/", "", $str);
     }
 
     public function montaSelect()
@@ -139,6 +158,8 @@ class UsuariosController extends Controller
 
     private function validation($input, $edit = false)
     {
+        $input['cnpj_cpf'] = $this->numero($input['cnpj_cpf']);
+
         $status = true;
         if (!$edit) {
             if (!empty($input['email'])) {
@@ -165,7 +186,7 @@ class UsuariosController extends Controller
             $status = false;
         }
 
-        if (empty($input['id_empresa'])) {
+        if (empty($input['id_empresa']) && $input['id_perfilusuario'] != 4) {
             $this->msg[] = 'Favor Selecionar a Empresa';
             $status = false;
         }

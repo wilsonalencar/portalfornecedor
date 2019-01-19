@@ -95,7 +95,7 @@
                   <div class="row" id="cpf-cnpj" style="display:none">
                     <div class="col s3">
                     <label for="cnpj_cpf">CNPJ_CPF</label>
-                      <input type="text" id="cnpj_cpf" name="cnpj_cpf" class="validate" maxlength="">
+                      <input type="text" id="cnpj_cpf" name="cnpj_cpf" class="validate" maxlength="18" onblur="mask(this,val_cnpj)" onkeypress="mask(this,val_cnpj)">
                     </div>
                   </div>
 

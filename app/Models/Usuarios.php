@@ -22,6 +22,7 @@ class Usuarios extends Authenticatable
         'usuarioid',
         'nome',
         'email',
+        'id_fornecedor',
         'id_perfilusuario',
         'password',
         'reset_senha',
