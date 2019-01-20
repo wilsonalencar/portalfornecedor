@@ -22,7 +22,7 @@ Route::group(['middleware' => ['web']], function() {
 
 Route::group(['middleware' => ['auth']], function() {
 	
-	Route::get('/teste', function () { return view('ordem_compra.index'); });
+	Route::get('/teste', function () { return view('nota_fiscal.show'); });
 	Route::get('/', [ 'as' => 'home', 'uses' => 'PagesController@home' ]);
 	Route::get('/home', 'HomeController@index')->name('home');
 	
@@ -43,8 +43,17 @@ Route::group(['middleware' => ['auth']], function() {
 	Route::get('/busca_fornecedor/{id}', array('as'=>'fornecedor.find', 'uses'=>'FornecedoresController@find'));
 	Route::get('/busca_fornecedor_agenda/{cnpj}', array('as'=>'fornecedor_agenda.find', 'uses'=>'OrdemCompraController@find'));
 
+	Route::get('/busca_estabelecimento_agenda/{cnpj}', array('as'=>'estabelecimento_agenda.find', 'uses'=>'NotaFiscalController@find'));
+
 	//ordemcompra
 	Route::get('/ordemcompra', 'OrdemCompraController@create');
 	Route::post('/ordemcompra', 'OrdemCompraController@create');
 	Route::get('/ordemcompra/delete/{id}', array('as'=>'ordemcompra.excluir', 'uses'=>'OrdemCompraController@destroy'));
+
+	//notafiscalservico
+	Route::get('/notafiscal/consulta', array('as'=>'notafiscal.listar', 'uses'=>'NotaFiscalController@listar'));
+	Route::get('/notafiscal', 'NotaFiscalController@create');
+	Route::post('/notafiscal', 'NotaFiscalController@create');
+	Route::post('/notafiscal/create', 'NotaFiscalController@store');
+
 });

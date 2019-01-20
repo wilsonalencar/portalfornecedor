@@ -37,4 +37,10 @@ class Fornecedor extends Model
 
     ];
 
+    /*pubic fcuntion itens()
+    {
+        return has many com o id_notafiscal que está na outra tabela.
+        
+    }*/
+
 }

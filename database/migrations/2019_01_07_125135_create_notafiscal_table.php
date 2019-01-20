@@ -23,13 +23,13 @@ class CreateNotafiscalTable extends Migration
             $table->integer('ordemcompraid');
             $table->date('data_emissao');
             $table->date('data_lancamento');
-            $table->string('observacao', 255);
+            $table->string('observacao', 255)->nullable();
             $table->decimal('valor_total_bruto', 10, 2);
             $table->decimal('valor_total_liquido', 10, 2);
             $table->decimal('vlr_iss', 10, 2);
             $table->decimal('vlr_irrf', 10, 2);
             $table->decimal('vlr_outros', 10, 2);
-            $table->decimal('vlr_inss', 10, 2);
+            $table->decimal('vlr_inss', 10, 2)->default(0);
         });
     }
 

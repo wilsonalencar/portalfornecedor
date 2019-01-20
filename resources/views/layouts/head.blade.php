@@ -251,7 +251,12 @@
                         <?php } ?> 
                         <?php if (Auth::User()->perfil->hasRole('nota_fiscal_de_servico') && session()->has('seid')) { ?> 
                         <li>
-                            <a class="active-menu waves-effect waves-dark" href="index.php"><i class="fa fa-barcode"></i> Nota Fiscal de Serviço</a>
+                            <a class="active-menu waves-effect waves-dark" href="{{ action('NotaFiscalController@create') }}"><i class="fa fa-barcode"></i> Nota Fiscal de Serviço<span class="fa arrow"></span></a>
+                            <ul class="nav nav-third-level">
+                                <li>
+                                    <a class="active-menu" href="{{ action('NotaFiscalController@listar') }}"> Consultar</a>
+                                </li>
+                            </ul>
                         </li>
                         <?php } ?> 
                         <?php if (Auth::User()->perfil->hasRole('repositorio') && session()->has('seid')) { ?> 
