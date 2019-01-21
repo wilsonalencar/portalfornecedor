@@ -53,7 +53,7 @@
                                       @if (!empty($table))
                                          @foreach ($table as $key => $value)
                                                 <tr class="odd gradeX">
-                                                  <td><?php echo utf8_decode($value->nome);?></td>
+                                                  <td><?php echo $value->nome;?></td>
                                                   <td><?php echo $value->email;?></td>
                                                   <td><?php echo $value->perfil->nome;?></td>
                                                   <td>

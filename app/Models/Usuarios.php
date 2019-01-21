@@ -32,6 +32,15 @@ class Usuarios extends Authenticatable
         'status'
     ];
 
+    public function hasEmpresa($id)
+    {
+        $has =  DB::Table('permissaoempresas')->where('id_empresa', $id)->where('id_usuario', $this->usuarioid)->first();
+        if (empty($has)) {
+            return false;
+        }
+        return true;
+    }
+
     public function CreateUserInPlataforma($input)
     {
         $usuario = DB::Select('select * from plataforma.plataformausuario where plataformausuario.email= "'.$input['email'].'" limit 1');

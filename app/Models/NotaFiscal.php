@@ -35,12 +35,13 @@ class NotaFiscal extends Model
     ];
 
     public function getNextNota()
-    {
+    {   
         $register = DB::table('notafiscal')->orderby('serie', 'desc')->orderby('nota_fiscal', 'desc')->first();
         if (!empty($register)) {
             if ($register->nota_fiscal == '9.999') {
                 return '0.001';
             }
+            
             return (float)$register->nota_fiscal+0.001;
         } else {
             return '0.001 ';

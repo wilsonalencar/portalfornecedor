@@ -192,15 +192,13 @@ class NotaFiscalController extends Controller
     private function validation($input)
     {
         $status = true;
-        if (!$edit) {
-            if (!empty($input['nota_fiscal'])) {
-                $notafiscal = NotaFiscal::Where('nota_fiscal', $input['nota_fiscal'])->where('serie', $input['serie'])->first();
-            }
-            if (!empty($notafiscal)) {
-                $this->msg[] = 'Nota Fiscal Já Cadastrada';
-                $status = false;
-            }   
+        if (!empty($input['nota_fiscal'])) {
+            $notafiscal = NotaFiscal::Where('nota_fiscal', $input['nota_fiscal'])->where('serie', $input['serie'])->first();
         }
+        if (!empty($notafiscal)) {
+            $this->msg[] = 'Nota Fiscal Já Cadastrada';
+            $status = false;
+        }   
 
         if ($status) {
             return true;        

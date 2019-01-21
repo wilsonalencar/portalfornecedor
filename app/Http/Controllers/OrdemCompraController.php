@@ -102,7 +102,7 @@ class OrdemCompraController extends Controller
     public function create(Request $request)
     {
         $table = OrdemCompra::where('empresaid', session()->get('seid'))->get();
-        $fornecedores = Fornecedor::where('empresaid', session()->get('seid'))->get();
+        $fornecedores = Fornecedor::where('empresaid', session()->get('seid'))->orderby('nome_fantasia', 'asc')->get();
         $query = "SELECT nome, codigo FROM agenda.municipios";
         $municipios = DB::select($query);
         
