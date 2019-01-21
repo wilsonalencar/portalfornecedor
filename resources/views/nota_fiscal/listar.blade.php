@@ -62,7 +62,16 @@
                                                 <td>{{ date("d/m/Y", strtotime($value->data_lancamento)) }}</td>
                                                 <td>R$ <?php echo $value->valor_total_liquido;?></td>
                                                 <td>
+                                                  <?php
+                                                    $data_atual = date('Y-m-d');
+                                                    $datalancamento = $value->data_lancamento;
+                                                    $data_limite = date('Y-m-d', strtotime('+5 days', strtotime($datalancamento)));
+                                                  ?>
+                                                    @if(strtotime($data_limite) > strtotime($data_atual))
                                                     <a href="{{ route('notafiscal.editar', $value->id) }}"><i class="material-icons">mode_edit</i></a>
+                                                    @else
+                                                    <a href="{{ action('NotaFiscalController@show', $value->id) }}"><i class="material-icons">zoom_in</i></a>
+                                                    @endif  
                                                     <a href="{{ route('notafiscal.excluir', $value->id) }}"><i class="material-icons">delete</i></a>
                                                 </td>
                                               </tr>

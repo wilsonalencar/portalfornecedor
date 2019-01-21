@@ -243,6 +243,14 @@ class NotaFiscalController extends Controller
     {
         $notafiscal = NotaFiscal::findOrFail($id);
 
+        $data_atual = date('Y-m-d');
+        $datalancamento = $notafiscal->data_lancamento;
+        $data_limite = date('Y-m-d', strtotime('+5 days', strtotime($datalancamento)));
+
+        if ($data_atual > $data_limite) {
+            return redirect()->action('NotaFiscalController@listar');
+        }
+
         $fornecedor = Fornecedor::where('id', $notafiscal->fornecedorid)->where('id', Auth::user()->id_fornecedor)->get()->first();
 
         $query = "SELECT nome, uf FROM ".env('DB_DATABASE1').".municipios WHERE municipios.codigo = '".$fornecedor->cod_municipio."'";
