@@ -63,7 +63,7 @@
                                               }
                                            ?>
                                                 <tr class="odd gradeX">
-                                                  <td><?php echo utf8_decode($value->nome_fantasia);?></td>
+                                                  <td><?php echo $value->nome_fantasia;?></td>
                                                   <td><?php echo $value->cnpj_cpf;?></td>
                                                   <td><?php echo $value->insc_estadual;?></td>
                                                   <td><?php echo $value->insc_municipal;?></td>

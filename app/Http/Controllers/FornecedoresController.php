@@ -29,7 +29,7 @@ class FornecedoresController extends Controller
 
     private function loadMunicipio($codigo, $parametro)
     {
-        $query = "SELECT nome, uf FROM agenda.municipios WHERE municipios.codigo = '".$codigo."'";
+        $query = "SELECT nome, uf FROM agenda.municipios WHERE municipios.codigo = '".$codigo."' ORDER BY municipios.nome ASC";
         $municipios = DB::select($query);   
 
         if ($parametro == 'municipio') {
@@ -79,7 +79,7 @@ class FornecedoresController extends Controller
 
     public function create(Request $request)
     {
-        $query = "SELECT nome, codigo FROM agenda.municipios";
+        $query = "SELECT nome, codigo FROM agenda.municipios ORDER BY municipios.nome ASC";
         $municipios = DB::select($query);
 
         if (!empty($request->all())) {
@@ -176,7 +176,7 @@ class FornecedoresController extends Controller
     {
         $input = $request->all();
 
-        $query = "SELECT nome, codigo FROM agenda.municipios";
+        $query = "SELECT nome, codigo FROM agenda.municipios ORDER BY municipios.nome ASC";
         $municipios = DB::select($query);
 
         $fornecedor = Fornecedor::findOrFail($id);
@@ -209,7 +209,7 @@ class FornecedoresController extends Controller
             $fornecedor = Fornecedor::findOrFail($id);
 
             Fornecedor::destroy($id);
-            $table = Fornecedor::all();
+            $table = Fornecedor::where('empresaid', session()->get('seid'))->get();
 
             return view('fornecedores.listar', compact('table', 'success'))->with('msg', 'Fornecedor excluído com sucesso.');
         }

@@ -141,7 +141,7 @@
                                                   <td><?php echo $value->estabelecimento($value->estabid);?></td>
                                                   <td><?php echo $value->fornecedor->nome_fantasia;?></td>
                                                   <td>
-                                                    <a href="#" onclick="editar('<?php echo $value->id; ?>','<?php echo $value->estabelecimento($value->id, true); ?>','<?php echo $value->fornecedor->id; ?>','<?php echo $value->ordemcompra; ?>')"><i class="material-icons">mode_edit</i></a>
+                                                    <a href="#" onclick="editar('<?php echo $value->id; ?>','<?php echo $value->estabelecimento($value->estabid, true); ?>','<?php echo $value->fornecedor->id; ?>','<?php echo $value->ordemcompra; ?>')"><i class="material-icons">mode_edit</i></a>
                                                     <a href="#"><i class="material-icons" onclick="confirmdelete(<?php echo $value->id; ?>)">delete</i></a>
                                                   </td>
                                                 </tr>

@@ -88,13 +88,16 @@
                              @endforeach
                          </select>
                     </div>
-
                     <div class="col s3">
                         <label for="id_empresa">Empresas</label>
                         <select id="id_empresa" name="id_empresa[]" multiple class="form-control input-sm">
                            @foreach($empresas as $empresa)
-
-                               <option value="{{ $empresa['id'] }}">{{ $empresa['razao_social'] }}</option>
+                              
+                              @if($usuario->hasEmpresa($empresa['id']))
+                                  <option selected value="{{ $empresa['id'] }}">{{ $empresa['razao_social'] }}</option>
+                              @else
+                                  <option value="{{ $empresa['id'] }}">{{ $empresa['razao_social'] }}</option>
+                              @endif
 
                            @endforeach
                          </select>

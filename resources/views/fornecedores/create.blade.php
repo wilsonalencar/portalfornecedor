@@ -52,13 +52,13 @@
                         <input type="hidden" name="_token" value="{!! csrf_token(); !!}"> 
                         <div class="col s3">
                         <label for="razao_social">Razão Social</label>
-                          <input id="razao_social" type="text" name="razao_social" maxlength="20" class="validate" value="">
+                          <input id="razao_social" type="text" name="razao_social" maxlength="255" class="validate" value="">
                         </div>
                       </div>
                       <div class="row">
                         <div class="col s6">
                         <label for="nome_fantasia">Nome Fantasia</label>
-                          <input type="text" id="nome_fantasia" name="nome_fantasia" class="validate" maxlength="255" value="">
+                          <input type="text" id="nome_fantasia" name="nome_fantasia" class="validate" maxlength="30" value="">
                         </div>
                       </div>
                       <div class="row">
