@@ -174,7 +174,6 @@ class NotaFiscalController extends Controller
                 $this->msg[] = 'Fornecedor Inexistente';
                 return view('nota_fiscal.show', compact('success'))->with('msg', $this->msg);
             }
-
             $query = "SELECT nome, uf FROM ".env('DB_DATABASE1').".municipios WHERE municipios.codigo = '".$fornecedor->cod_municipio."'";
             $municipios = DB::select($query);
             if (!empty($municipios)) {
@@ -213,9 +212,27 @@ class NotaFiscalController extends Controller
 
     public function listar()
     {
-        $table = NotaFiscal::where('empresaid', session()->get('seid'))->get();
-        
+        $table = NotaFiscal::where('empresaid', session()->get('seid'))->get();   
         return view('nota_fiscal.listar')->with('table', $table);
+    }
+
+    public function repositorio()
+    {
+        $table = NotaFiscal::where('empresaid', session()->get('seid'));
+
+        if (Auth::user()->id_perfilusuario == 4) {
+            $table = $table->where('id_fornecedor', Auth::user()->id_fornecedor);
+        }
+        
+        $table = $table->get();
+
+        return view('nota_fiscal.repositorio')->with('table', $table);
+    }
+
+    public function show($id)
+    {
+        $table = NotaFiscal::findOrFail($id);
+        return view('nota_fiscal.repositorio_show')->with('notafiscal', $table);
     }
 
     public function editar($id, Request $request)
