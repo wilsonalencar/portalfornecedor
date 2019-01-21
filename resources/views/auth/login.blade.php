@@ -1,5 +1,5 @@
 <?php 
-header('location:http://dev.platform/login.php');
+header('location:http://dev.platform/login.php');exit;
 ?>
 @extends('layouts.app')
 
