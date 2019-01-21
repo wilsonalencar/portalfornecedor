@@ -13,12 +13,14 @@
 	<link href="{{ URL::to('/') }}/assets/css/custom-styles.css" rel="stylesheet" />
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
 
-	<link rel="stylesheet" href="{{ URL::to('/') }}/assets/js/Lightweight-Chart/cssCharts.css"> 
+    <link rel="stylesheet" href="{{ URL::to('/') }}/assets/js/Lightweight-Chart/cssCharts.css"> 
 
-	<!-- DataTables CSS -->
-	<link rel="stylesheet" href="cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/css/jquery.dataTables.min.css">
-	<link rel="stylesheet" href="cdnjs.cloudflare.com/ajax/libs/datatables-tabletools/2.1.5/css/TableTools.min.css">
-	<link rel="stylesheet" href="cdn.datatables.net/buttons/1.1.2/css/buttons.dataTables.min.css">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="cdnjs.cloudflare.com/ajax/libs/datatables-tabletools/2.1.5/css/TableTools.min.css">
+    <link rel="stylesheet" href="cdn.datatables.net/buttons/1.1.2/css/buttons.dataTables.min.css">
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
 </head>
 
     <body>
@@ -261,7 +263,7 @@
                         <?php } ?> 
                         <?php if (Auth::User()->perfil->hasRole('repositorio') && session()->has('seid')) { ?> 
                         <li>
-                            <a class="active-menu waves-effect waves-dark" href="index.php"><i class="fa fa-bars"></i> Repositório</a>
+                            <a class="active-menu waves-effect waves-dark" href="{{ action('NotaFiscalController@repositorio') }}"><i class="fa fa-bars"></i> Repositório</a>
                         </li>
                         <?php } ?> 
                         <?php if (Auth::User()->perfil->hasRole('exportar_dados') && session()->has('seid')) { ?> 

@@ -53,6 +53,9 @@ Route::group(['middleware' => ['auth']], function() {
 	//notafiscalservico
 	Route::get('/notafiscal/consulta', array('as'=>'notafiscal.listar', 'uses'=>'NotaFiscalController@listar'));
 	Route::get('/notafiscal', 'NotaFiscalController@create');
+	Route::get('/notafiscal/repositorio', 'NotaFiscalController@repositorio');
+	Route::get('/notafiscal/repositorio/{id}', 'NotaFiscalController@show');
+	
 	Route::post('/notafiscal', 'NotaFiscalController@create');
 	Route::post('/notafiscal/create', 'NotaFiscalController@store');
 

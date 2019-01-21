@@ -58,4 +58,22 @@ class NotaFiscal extends Model
             return '1';
         }
     }
+
+    public function fornecedor()
+    {
+        return $this->belongsTo('App\Models\Fornecedor','fornecedorid');
+    }
+
+    public function empresa()
+    {
+        $sql = "SELECT A.*, B.* from agenda.estabelecimentos A INNER JOIN agenda.municipios B on B.codigo = A.cod_municipio WHERE A.id = '".$this->estabid."'";
+
+        $array = DB::select($sql);
+        return $array[0];
+    }
+
+    public function itens()
+    {
+        return $this->hasMany('App\Models\ItemNotaFiscal', 'notafiscal_id');
+    }
 }
