@@ -76,7 +76,15 @@ class NotaFiscal extends Model
 
     public function empresa()
     {
-        $sql = "SELECT A.*, B.* from agenda.estabelecimentos A INNER JOIN agenda.municipios B on B.codigo = A.cod_municipio WHERE A.id = '".$this->estabid."'";
+        $sql = "SELECT A.*, B.* from ".env('DB_DATABASE1').".estabelecimentos A INNER JOIN agenda.municipios B on B.codigo = A.cod_municipio WHERE A.id = '".$this->estabid."'";
+
+        $array = DB::select($sql);
+        return $array[0];
+    }
+
+    public function real_empresa()
+    {
+        $sql = "SELECT A.*, B.* from ".env('DB_DATABASE1').".empresas A INNER JOIN agenda.municipios B on B.codigo = A.cod_municipio WHERE A.id = '".$this->empresaid."'";
 
         $array = DB::select($sql);
         return $array[0];

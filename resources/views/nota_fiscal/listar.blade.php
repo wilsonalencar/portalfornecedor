@@ -60,7 +60,7 @@
                                                 <td><?php echo $value->nota_fiscal;?></td>
                                                 <td><?php echo $value->serie;?></td>
                                                 <td>{{ date("d/m/Y", strtotime($value->data_lancamento)) }}</td>
-                                                <td>R$ <?php echo $value->valor_total_liquido;?></td>
+                                                <td>R$ <?php echo number_format($value->valor_total_liquido, 2, ',', '.');?></td>
                                                 <td>
                                                   <?php
                                                     $data_atual = date('Y-m-d');
@@ -69,9 +69,8 @@
                                                   ?>
                                                     @if(strtotime($data_limite) > strtotime($data_atual))
                                                     <a href="{{ route('notafiscal.editar', $value->id) }}"><i class="material-icons">mode_edit</i></a>
-                                                    @else
-                                                    <a href="{{ action('NotaFiscalController@show', $value->id) }}"><i class="material-icons">zoom_in</i></a>
                                                     @endif  
+                                                    <a href="{{ action('NotaFiscalController@show', $value->id) }}"><i class="material-icons">zoom_in</i></a>
                                                     <a href="{{ route('notafiscal.excluir', $value->id) }}"><i class="material-icons">delete</i></a>
                                                 </td>
                                               </tr>

@@ -16,6 +16,20 @@ class NotaFiscalController extends Controller
 {
     public $msg = array();
 
+    public function exportarDados()
+    {
+        $table = NotaFiscal::where('empresaid', session()->get('seid'))->orderby('id', 'desc')->get();
+
+        $itens = array();
+        if (!empty($table)) {
+            foreach ($table as $x => $single) {
+                $itens[$single->id] = ItemNotaFiscal::where('notafiscal_id', $single->id)->orderby('notafiscal_id', 'desc')->get();
+            }
+        }
+
+        return view('nota_fiscal.exportar')->with('table', $table)->with('itens', $itens);
+    }
+
     public function find($cnpj)
     {
         $cnpj = $this->numero($cnpj);
@@ -303,7 +317,7 @@ class NotaFiscalController extends Controller
             
             }
 
-            $table = NotaFiscal::all();
+            $table = NotaFiscal::where('empresaid', session()->get('seid'))->get();
 
             return view('nota_fiscal.listar', compact('table', 'success'))->with('msg', 'Nota Fiscal excluída com sucesso.');
         }

@@ -64,5 +64,6 @@ Route::group(['middleware' => ['auth']], function() {
 	Route::get('/notafiscal/edit/{id}', array('as'=>'notafiscal.editar', 'uses'=>'NotaFiscalController@editar'));
 	Route::post('/notafiscal/edit/{id}', array('as'=>'notafiscal.editar', 'uses'=>'NotaFiscalController@editar'));
 	
+	Route::get('/notafiscal/exportar', array('as'=>'notafiscal.export', 'uses'=>'NotaFiscalController@exportarDados'));
 
 });

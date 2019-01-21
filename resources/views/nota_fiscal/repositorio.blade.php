@@ -60,7 +60,7 @@
                                                 <td><?php echo $value->nota_fiscal;?></td>
                                                 <td><?php echo $value->serie;?></td>
                                                 <td>{{ date("d/m/Y", strtotime($value->data_lancamento)) }}</td>
-                                                <td>R$ <?php echo $value->valor_total_liquido;?></td>
+                                                <td>R$ <?php echo number_format($value->valor_total_liquido, 2, ',', '.');?></td>
                                                 <td>
                                                   <a href="{{ action('NotaFiscalController@show', $value->id) }}"><i class="material-icons">zoom_in</i></a>
                                               </tr>

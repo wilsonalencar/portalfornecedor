@@ -16,9 +16,11 @@
     <link rel="stylesheet" href="{{ URL::to('/') }}/assets/js/Lightweight-Chart/cssCharts.css"> 
 
     <!-- DataTables CSS -->
-    <link rel="stylesheet" href="cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="cdnjs.cloudflare.com/ajax/libs/datatables-tabletools/2.1.5/css/TableTools.min.css">
-    <link rel="stylesheet" href="cdn.datatables.net/buttons/1.1.2/css/buttons.dataTables.min.css">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.2/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+    
+
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
 </head>
@@ -271,7 +273,7 @@
                         <?php } ?> 
                         <?php if (Auth::User()->perfil->hasRole('exportar_dados') && session()->has('seid')) { ?> 
                         <li>
-                            <a class="active-menu waves-effect waves-dark" href="index.php"><i class="fa fa-download"></i> Exportar Dados</a>
+                            <a class="active-menu waves-effect waves-dark" href="{{ action('NotaFiscalController@exportarDados') }}"><i class="fa fa-download"></i> Exportar Dados</a>
                         </li>
                         <?php } ?> 
                     </ul>

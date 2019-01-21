@@ -4,6 +4,10 @@
          border: 1px solid black;
        }
 
+       .item {
+         border: 0px solid black;
+       }
+
     </style>
     <div id="page-wrapper" >
 		  <div class="header"> 
@@ -22,29 +26,29 @@
          <div class="card">
                 <div class="card-action">
                   <div class="row">
-
                   <div class="col-md-12" id="customers">  
-                  <button class="btn btn-danger" onclick="javascript:demoFromHTML()">PDF</button>
+                  <button class="btn btn-danger" onclick="printDiv('pdf')">PDF</button>
                   <br />
                   <br />
-                    <table id="tab_customers" class="table table-striped" >
+                  <div id="pdf">
+                    <table id="dataTables-example" class="table table-striped" >
                       <thead >
                         <tr>
-                          <td colspan="6"></td>
+                          <th colspan="6" style="display: none"></th>
                         </tr>
                       </thead>
                       <tbody>
                           <tr>
                             <td colspan="4" align="center">
                               <br />
-                              <p style="font-size: 24px" align="center"><?php echo $notafiscal->fornecedor->razao_social; ?></p>
-                              <p style="font-size: 12px" align="center"><?php echo $notafiscal->fornecedor->nome_fantasia.' - '.$notafiscal->fornecedor->endereco.' - '.$notafiscal->fornecedor->id; ?></p>
+                              <p style="font-size: 24px" align="center"><b><?php echo $notafiscal->fornecedor->razao_social; ?></b></p>
+                              <p style="font-size: 12px" align="center"><?php echo $notafiscal->fornecedor->nome_fantasia.' -  '.$notafiscal->fornecedor->endereco.' -  '.$notafiscal->fornecedor->id; ?></p>
                             </td>
                             <td colspan="2">
-                              <p style="font-size: 14px" align="center">NOTA FISCAL DE SERVIÇO</p>
+                              <p style="font-size: 14px" align="center"><b>NOTA FISCAL DE SERVIÇO</b></p>
                               <p style="font-size: 8px"  align="center">Imposto sobre serviço de qualquer natureza</p>
                               <p style="font-size: 11px" align="center">MOD : 4</p>
-                              <p style="font-size: 11px" align="center">Validade <?php echo $notafiscal->data_lancamento; ?></p>
+                              <p style="font-size: 11px" align="center">Validade : {{ date("d/m/Y", strtotime($notafiscal->data_lancamento)) }}</p>
                               <p style="font-size: 20px" align="center"><b>Nº <?php echo $notafiscal->serie; ?></b></p>
                             </td>
                           </tr>
@@ -52,30 +56,30 @@
                             <td colspan="6">&nbsp;</td>
                           </tr>
                           <tr>
-                            <td colspan="6">CNPJ/CPF - <?php echo $notafiscal->empresa()->cnpj; ?></td>
+                            <td colspan="6"><b>Cnpj/Cpf</b> -  <?php echo $notafiscal->empresa()->cnpj; ?></td>
                           </tr>
                           <tr class="pulalinha">
                             <td colspan="6">&nbsp;</td>
                           </tr>
                           <tr>
-                            <td colspan="6"><?php echo $notafiscal->empresa()->razao_social; ?></td>
+                            <td colspan="6"><b>Tomador de Serviço</b> -  <?php echo $notafiscal->empresa()->razao_social; ?></td>
                           </tr>
 
                           <tr class="pulalinha">
                             <td colspan="6">&nbsp;</td>
                           </tr>
                           <tr>
-                            <td colspan="4"><?php echo $notafiscal->empresa()->nome; ?></td>
-                            <td colspan="2"><?php echo $notafiscal->empresa()->uf; ?></td>
+                            <td colspan="4"><b>Cidade</b> -  <?php echo $notafiscal->empresa()->nome; ?></td>
+                            <td colspan="2"><b>UF</b> -  <?php echo $notafiscal->empresa()->uf; ?></td>
                           </tr>
 
                           <tr class="pulalinha">
                             <td colspan="6">&nbsp;</td>
                           </tr>
                           <tr>
-                            <td colspan="3"><?php echo $notafiscal->empresa()->endereco; ?></td>
-                            <td colspan="1"><?php echo $notafiscal->empresa()->insc_municipal; ?></td>
-                            <td colspan="2">Data Emissão : <?php echo $notafiscal->data_emissao ?></td>
+                            <td colspan="3"><b>Endereço</b> -  <?php echo $notafiscal->empresa()->endereco; ?></td>
+                            <td colspan="1"><b>Insc. Mun.</b> - <?php echo $notafiscal->empresa()->insc_municipal; ?></td>
+                            <td colspan="2"><b>Data Emissão</b> -  {{ date("d/m/Y", strtotime($notafiscal->data_emissao)) }}</td>
                           </tr>
 
                           <tr class="pulalinha">
@@ -90,11 +94,11 @@
                           </tr>
                           @foreach($notafiscal->itens as $item)
                             <tr>
-                              <th colspan="1">{{ $item->unidade }}</th>
-                              <th colspan="1">{{ $item->quantidade }}</th>
-                              <th colspan="2">{{ $item->descricao }}</th>
-                              <th colspan="1">R$ {{ $item->valor_unitario_item }}</th>
-                              <th colspan="1">R$ {{ $item->valor_total_item }}</th>
+                              <td colspan="1" class="item">{{ $item->unidade }}</td>
+                              <td colspan="1" class="item">{{ $item->quantidade }}</td>
+                              <td colspan="2" class="item">{{ $item->descricao }}</td>
+                              <td colspan="1" class="item">R$ {{ number_format($item->valor_unitario_item, 2, ',', '.') }}</td>
+                              <td colspan="1" class="item">R$ {{ number_format($item->valor_total_item, 2, ',', '.') }}</td>
                             </tr>
                           @endforeach
 
@@ -104,32 +108,33 @@
                           <tr class="pulalinha">
                             <td colspan="6">&nbsp;</td>
                           </tr>
-
+                          
                           <tr>
                             <td colspan="1">I</td>
                             <td colspan="3">VALOR TOTAL DOS SERVIÇOS</td>
-                            <td colspan="2">R$ {{ $notafiscal->valor_total_bruto }}</td>
+                            <td colspan="2">R$ {{ number_format($notafiscal->valor_total_bruto, 2, ',', '.') }}</td>
                           </tr>
                           <tr>
                             <td colspan="1">II</td>
                             <td colspan="3">RETENÇÃO DO ISS NA FONTE</td>
-                            <td colspan="2">R$ {{ $notafiscal->vlr_iss }}</td>
+                            <td colspan="2">R$ {{ number_format($notafiscal->valor_iss, 2, ',', '.') }} </td>
                           </tr>
                           <tr>
                             <td colspan="1">III</td>
                             <td colspan="3">OUTRAS RETENÇÕES</td>
-                            <td colspan="2">R$ {{ $notafiscal->vlr_outros }}</td>
+                            <td colspan="2">R$ {{ number_format($notafiscal->vlr_outros, 2, ',', '.') }}</td>
                           </tr>
                           <tr>
                             <td colspan="1" >IV</td>
                             <td colspan="3" >VALOR A PAGAR</td>
-                            <td colspan="2" >R$ {{ $notafiscal->valor_total_liquido }}</td>
+                            <td colspan="2" >R$ {{ number_format($notafiscal->valor_total_liquido, 2, ',', '.') }}</td>
                           </tr>
 
                       </tbody>
                     </table>
                   </div>
-
+                  <a href="{{ url()->previous() }}" class="btn btn-default">Voltar</a>
+                  </div>
                   <div class="clearBoth"></div>
             </div>
       </div>
@@ -137,43 +142,13 @@
 
 
 <script type="text/javascript">
-        function demoFromHTML() {
-            var pdf = new jsPDF('p', 'pt', 'letter');
-            // source can be HTML-formatted string, or a reference
-            // to an actual DOM element from which the text will be scraped.
-            source = $('#customers')[0];
 
-            // we support special element handlers. Register them with jQuery-style 
-            // ID selector for either ID or node name. ("#iAmID", "div", "span" etc.)
-            // There is no support for any other type of selectors 
-            // (class, of compound) at this time.
-            specialElementHandlers = {
-                // element with id of "bypass" - jQuery style selector
-                '#bypassme': function(element, renderer) {
-                    // true = "handled elsewhere, bypass text extraction"
-                    return true
-                }
-            };
-            margins = {
-                top: 80,
-                bottom: 60,
-                left: 40,
-                width: 522
-            };
-            // all coords and widths are in jsPDF instance's declared units
-            // 'inches' in this case
-            pdf.fromHTML(
-                    source, // HTML string or DOM elem ref.
-                    margins.left, // x coord
-                    margins.top, {// y coord
-                        'width': margins.width, // max width of content on PDF
-                        'elementHandlers': specialElementHandlers
-                    },
-            function(dispose) {
-                // dispose: object with X, Y of the last line add to the PDF 
-                //          this allow the insertion of new lines after html
-                pdf.save('fiscal.pdf');
-            }
-            , margins);
-        }
-    </script>
+function printDiv(divName) {
+     var printContents = document.getElementById(divName).innerHTML;
+     var originalContents = document.body.innerHTML;
+     document.body.innerHTML = printContents;
+     window.print();
+     document.body.innerHTML = originalContents;
+}
+
+</script>

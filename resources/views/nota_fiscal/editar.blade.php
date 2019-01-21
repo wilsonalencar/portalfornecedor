@@ -309,6 +309,7 @@ function calcular(id, parametro) {
         }
     }
 
+    document.getElementById('p_unit['+id+']').value = (p_unitario*1).toFixed(2);
     document.getElementById('total['+id+']').value = (quantidade*p_unitario).toFixed(2);
     Soma();
 }

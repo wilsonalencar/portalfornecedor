@@ -32,4 +32,9 @@ class ItemNotaFiscal extends Model
         'aql_inss',
         'vlr_inss'
     ];
+
+    public function notafiscal()
+    {
+        return $this->belongsTo('App\Models\NotaFiscal','notafiscal_id');
+    }
 }
