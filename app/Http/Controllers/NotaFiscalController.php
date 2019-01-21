@@ -111,11 +111,14 @@ class NotaFiscalController extends Controller
         return Redirect::action('NotaFiscalController@create');
     }
 
-    public function saveItemNota($dados, $id )
+    public function saveItemNota($dados, $id, $edit = false)
     {
         $item_nota = new ItemNotaFiscal;
 
         $servicos = $dados['servicos'];
+        if ($edit) {
+            ItemNotaFiscal::where('notafiscal_id', '=', $id)->delete();
+        }
 
         $item_nota = array();
         foreach ($servicos as $key => $item) {
@@ -186,7 +189,7 @@ class NotaFiscalController extends Controller
         return view('nota_fiscal.show');
     }
 
-    private function validation($input, $edit = false)
+    private function validation($input)
     {
         $status = true;
         if (!$edit) {
@@ -212,7 +215,8 @@ class NotaFiscalController extends Controller
 
     public function listar()
     {
-        $table = NotaFiscal::where('empresaid', session()->get('seid'))->get();   
+        $table = NotaFiscal::where('empresaid', session()->get('seid'))->get();
+
         return view('nota_fiscal.listar')->with('table', $table);
     }
 
@@ -221,7 +225,7 @@ class NotaFiscalController extends Controller
         $table = NotaFiscal::where('empresaid', session()->get('seid'));
 
         if (Auth::user()->id_perfilusuario == 4) {
-            $table = $table->where('id_fornecedor', Auth::user()->id_fornecedor);
+            $table = $table->where('fornecedorid', Auth::user()->id_fornecedor);
         }
         
         $table = $table->get();
@@ -237,48 +241,65 @@ class NotaFiscalController extends Controller
 
     public function editar($id, Request $request)
     {
-        foreach ($notafiscal->items as $x => $value) {
-            # code...
-        }
+        $notafiscal = NotaFiscal::findOrFail($id);
 
-        $input = $request->all();
+        $fornecedor = Fornecedor::where('id', $notafiscal->fornecedorid)->where('id', Auth::user()->id_fornecedor)->get()->first();
 
-        $query = "SELECT nome, codigo FROM agenda.municipios";
+        $query = "SELECT nome, uf FROM ".env('DB_DATABASE1').".municipios WHERE municipios.codigo = '".$fornecedor->cod_municipio."'";
+        
         $municipios = DB::select($query);
 
-        $fornecedor = Fornecedor::findOrFail($id);
-        if (!empty($input)) {
-            if (!$this->validation($input, true)) {
-                $success = false;
-
-                return view('fornecedores.editar', compact('municipios','success', 'fornecedor'))->with('msg', $this->msg);
-            }
-
-            $fornecedor->fill($input);
-            $fornecedor->data_alteracao = date('Y-m-d H:i:s');
-            $fornecedor->save();
-
-
-            $success = true;
-            $this->msg[] = 'Fornecedor atualizado com sucesso';
-
-            return view('fornecedores.editar', compact('municipios', 'success', 'fornecedor'))->with('msg', $this->msg);
+        if (!empty($municipios)) {
+            $municipios = $municipios[0];
         }
 
-        return view('fornecedores.editar', compact('municipios','success', 'fornecedor'));
+        if (!empty($request->all())) {
+            
+            $input = $request->all();
+            $cnpj = str_replace('/', '', $input['cnpj_cpf']);
+            $cnpj = str_replace('.', '', $cnpj);
+            $cnpj = str_replace('-', '', $cnpj);
+
+            $ordemcompra = OrdemCompra::where('ordemcompra', $input['ordemcompra'])->get();
+
+            $sql = "SELECT A.id FROM ".env('DB_DATABASE1').".estabelecimentos A WHERE A.cnpj = '".$cnpj."'";
+            $estabelecimento = DB::select($sql); 
+
+            $input['estabid'] = $estabelecimento[0]->id;
+            $input['empresaid'] = session()->get('seid');
+            $input['ordemcompraid'] = $ordemcompra[0]->id; 
+
+            $notafiscal->fill($input);
+            $notafiscal->save();
+
+            $this->saveItemNota($input, $notafiscal->id, true);
+
+            $success = true;
+            $this->msg[] = 'Nota Fiscal atualizada com sucesso';
+
+        }
+
+        return view('nota_fiscal.editar', compact('success','fornecedor', 'municipios', 'notafiscal'))->with('msg', $this->msg);
     }
 
     public function destroy($id)
     { 
         if (!empty($id)) {
             $success = true;
-            
-            $notafiscal = NotaFiscal::findOrFail($id);
 
-            NotaFiscal::destroy($id);
+            $notafiscal = NotaFiscal::where('id', $id)->first();
+
+            if (!empty($notafiscal)) {
+
+                ItemNotaFiscal::where('notafiscal_id', '=', $notafiscal->id)->delete();
+
+                NotaFiscal::destroy($notafiscal->id);
+            
+            }
+
             $table = NotaFiscal::all();
 
-            return view('fornecedores.listar', compact('table', 'success'))->with('msg', 'Nota Fiscal excluída com sucesso.');
+            return view('nota_fiscal.listar', compact('table', 'success'))->with('msg', 'Nota Fiscal excluída com sucesso.');
         }
     }
 }

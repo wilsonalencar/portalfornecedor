@@ -60,6 +60,9 @@ Route::group(['middleware' => ['auth']], function() {
 	Route::get('/notafiscal/create', 'NotaFiscalController@store');
 	Route::post('/notafiscal', 'NotaFiscalController@create');
 	Route::post('/notafiscal/create', 'NotaFiscalController@store');
+	Route::get('/notafiscal/delete/{id}', array('as'=>'notafiscal.excluir', 'uses'=>'NotaFiscalController@destroy'));
+	Route::get('/notafiscal/edit/{id}', array('as'=>'notafiscal.editar', 'uses'=>'NotaFiscalController@editar'));
+	Route::post('/notafiscal/edit/{id}', array('as'=>'notafiscal.editar', 'uses'=>'NotaFiscalController@editar'));
 	
 
 });

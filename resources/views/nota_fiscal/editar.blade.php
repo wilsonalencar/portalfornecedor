@@ -13,7 +13,7 @@
       </div>
     
          <div id="page-inner"> 
-         <form id="form" action="{{ action('NotaFiscalController@store') }}" method="post" name="cad_notafiscal">
+         <form id="form" action="{{ action('NotaFiscalController@editar', $notafiscal->id) }}" method="post" name="edit_notafiscal">
          <div class="row">
          <div class="col-lg-12">
          <div class="card">
@@ -80,11 +80,11 @@
                         </div>
                         <div class="col-md-3">
                           <label>VALIDADE: </label>
-                          <input type="date" id="validade" name="data_lancamento" maxlength="8" value="" class="obrigatorio_data_lancamento">
+                          <input type="date" id="validade" name="data_lancamento" maxlength="8" value="{{ $notafiscal->data_lancamento }}" class="obrigatorio_data_lancamento">
                         </div>
                         <div class="col-md-4">
                           <label>Nº ORDEM DE COMPRA: </label>
-                          <input type="number" id="ordemcompra" name="ordemcompra" maxlength="8" value="" onblur="buscaOrdemCompra(this.value)">
+                          <input type="number" id="ordemcompra" name="ordemcompra" maxlength="8" value="{{ $notafiscal->ordemcompra->ordemcompra }}" onblur="buscaOrdemCompra(this.value)">
                         </div>
                     </div>
                   </div>
@@ -96,83 +96,90 @@
                         <input type="hidden" id="perfilusuario" name="perfilusuario" value="{{ Auth::user()->id_perfilusuario }}">
                         <div class="col-md-2">
                         <label for="nota_fiscal">Número Nota Fiscal</label>
-                          <input type="text" placeholder="{!! @$next !!}" readonly="true">
+                          <input type="text" name="nota_fiscal" readonly="true" value="{{ $notafiscal->nota_fiscal }}">
                         </div>
-                        <input type="hidden" name="nota_fiscal" value="{!! @$next !!}">
                         <div class="col-md-1">
                         <label for="serie">Série</label>
-                          <input type="text" placeholder="{!! @$nextSerie !!}" readonly="true">
+                          <input type="text" name="serie" value="{{ $notafiscal->serie }}" readonly="true">
                         </div>
-                        <input type="hidden" name="serie" value="{!! @$nextSerie !!}">
                         <div class="col-md-1">
                           <p></p>
                         </div>
                         <div class="col-md-3">
                         <label for="cnpj_cpf">CNPJ/CPF</label>
-                          <input type="text" id="cnpj_cpf" name="cnpj_cpf" value="" maxlength="18" onkeypress="mask(this,val_cnpj)" class="validate" onblur="buscaEstabelecimentoAgenda(this.value)">
+                          <input type="text" id="cnpj_cpf" name="cnpj_cpf" maxlength="18" onkeypress="mask(this,val_cnpj)" class="validate" onblur="buscaEstabelecimentoAgenda(this.value)" value="{{ $notafiscal->empresa()->cnpj }}">
                           <input type="hidden" name="estabid" value="">
                         </div>
                         <div class="col-md-11" align="left">
                         <label for="razao_social">Tomador do Serviço</label>
-                          <input id="razao_social" type="text" maxlength="20" value="" readonly="true">
+                          <input id="razao_social" type="text" maxlength="20" value="{{  $notafiscal->empresa()->razao_social }}" readonly="true">
                         </div>
                       </div>
                       <div class="row">
                         <div class="col-md-10">
                         <label for="endereco">Endereço</label>
-                          <input type="text" id="endereco" maxlength="255" value="" readonly="true">
+                          <input type="text" id="endereco" maxlength="255" value="{{ $notafiscal->empresa()->endereco }}" readonly="true">
                         </div>
                         <div class="col-md-1">
                           <label for="num_endereco">Número</label>
-                          <input type="text" id="num_endereco" maxlength="255" value="" readonly="true">
+                          <input type="text" id="num_endereco" maxlength="255" value="{{ $notafiscal->empresa()->num_endereco }}" readonly="true">
                         </div>
                       </div>
                       <div class="row">
                         <div class="col-md-3">
                           <label for="cidade">Cidade</label>
-                          <input type="text" id="cidade" maxlength="255" value="" readonly="true">
+                          <input type="text" id="cidade" maxlength="255" value="{{ $notafiscal->empresa()->nome }}" readonly="true">
                         </div>
                         <div class="col-md-3">
                           <label for="estado">Estado</label>
-                          <input type="text" id="estado" maxlength="2" value="" readonly="true">
+                          <input type="text" id="estado" maxlength="2" value="{{ $notafiscal->empresa()->uf }}" readonly="true">
                         </div>
                         <div class="col-md-3">
                           <label for="insc_municipal">Inscrição Municipal</label>
-                          <input type="text" id="insc_municipal" maxlength="255" value="" readonly="true">
+                          <input type="text" id="insc_municipal" maxlength="255" value="{{ $notafiscal->empresa()->insc_municipal }}" readonly="true">
                         </div>
                         <div class="col-md-2">
                         <label for="data_emissao">Data de Emissão</label>
-                          <input type="date" name="data_emissao" class="validate obrigatorio_data_emissao" maxlength="8" value="">
+                          <input type="date" name="data_emissao" class="validate obrigatorio_data_emissao" maxlength="8" value="{{ $notafiscal->data_emissao }}">
                         </div>
                       </div>
+                      @foreach($notafiscal->itens as $k => $item)
                       <div id="servicos">
-                          <div class="row" id="0">
+                          <div class="row" id="<?php echo $k; ?>">
                             <div class="col-md-1">
                               <label for="unidade">Unidade</label>
-                              <input type="text" id="unidade[0]" name="servicos[0][unidade]" class="validate obrigatorio_unidade" maxlength="255" value="">
+                              <input type="text" id="unidade[<?php echo $k; ?>]" name="servicos[<?php echo $k; ?>][unidade]" class="validate obrigatorio_unidade" maxlength="255" value="{{ $item->unidade }}">
                             </div>
                             <div class="col-md-1">
                             <label for="quantidade">Quantidade</label>
-                              <input type="text" id="quantidade[0]" name="servicos[0][quantidade]" class="validate obrigatorio_quantidade" maxlength="255" value="" onblur="calcular(0, 1)">
+                              <input type="text" id="quantidade[<?php echo $k; ?>]" name="servicos[<?php echo $k; ?>][quantidade]" class="validate obrigatorio_quantidade" maxlength="255" value="{{ $item->quantidade }}" onblur="calcular(0, 1)">
                             </div>
                             <div class="col-md-4">
                               <label for="descricao">Descrição</label>
-                              <input type="text" id="descricao[0]" name="servicos[0][descricao]" class="validate obrigatorio_descricao" maxlength="255" value="">
+                              <input type="text" id="descricao[<?php echo $k; ?>]" name="servicos[<?php echo $k; ?>][descricao]" class="validate obrigatorio_descricao" maxlength="255" value="{{ $item->descricao }}">
                             </div>
                             <div class="col-md-2">
                               <label for="p_unit">P.UNIT</label>
-                              <input type="text" id="p_unit[0]" name="servicos[0][valor_unitario_item]" class="validate obrigatorio_p_unit" maxlength="255" value="" onblur="calcular(0, 2)">
+                              <input type="text" id="p_unit[<?php echo $k; ?>]" name="servicos[<?php echo $k; ?>][valor_unitario_item]" class="validate obrigatorio_p_unit" maxlength="255" value="{{ $item->valor_unitario_item }}" onblur="calcular(0, 2)">
                             </div>
                             <div class="col-md-2">
                               <label for="total">Total</label>
-                              <input type="text" id="total[0]" class="validate totais" name="servicos[0][valor_total_item]" maxlength="255" value="" readonly="true">
+                              <input type="text" id="total[<?php echo $k; ?>]" class="validate totais" name="servicos[<?php echo $k; ?>][valor_total_item]" maxlength="255" value="{{ $item->valor_total_item }}" readonly="true">
                             </div>
+                            @if($k != 0)
+                              <div class="col-md-1">
+                                <a href='#' style='color:red' onclick="removeLinha(<?php echo $k; ?>)">[ remover ]</a>
+                              </div>
+                            @endif
+                            @if($k == 0)
                             <div class="col-md-1">
                               <br>
                                 <a href=# style=color:green id="add">[ adicionar ]</a>
                             </div>
+                            @endif
                           </div>
                       </div>
+                      @endforeach
                       <br>
                       <div class="row">
                         <div class="col-md-2">
@@ -206,7 +213,7 @@
                       <div class="row">
                         <div class="col-md-11">
                             <label for="observacao">Observação</label>
-                            <textarea id="observacao"  class="form-control" type="text" name="observacao" maxlength="255"></textarea>
+                            <textarea id="observacao"  class="form-control" type="text" name="observacao" maxlength="255">{{ $notafiscal->observacao }}</textarea>
                         </div>
                       </div>
                       <div class="row">
@@ -214,7 +221,7 @@
                         </div>
 
                         <div class="input-field col s2">
-                            <a href="#"  class="waves-effect waves-light btn">Voltar</a>
+                            <a href="{{ route('notafiscal.listar') }}"  class="waves-effect waves-light btn">Voltar</a>
                         </div>
                         <div class="input-field col s1">
                             <input type="submit" value="salvar" id="submit" class="waves-effect waves-light btn">
@@ -230,10 +237,12 @@
       </form>
 <script>
 
-$i = 1;
+window.onload = LoadTotais();
+$i = <?php echo $k; ?>;
 
 $("#add").click(function(){
 
+    $i++;
    $servicos = $("#servicos");
    $container = '<div class="row" id="'+$i+'">' 
 
@@ -269,8 +278,6 @@ $("#add").click(function(){
             +'</div>';
 
        $servicos.append($container);
-       $i++;
-
 });
 
 function removeLinha(id)
@@ -304,6 +311,11 @@ function calcular(id, parametro) {
 
     document.getElementById('total['+id+']').value = (quantidade*p_unitario).toFixed(2);
     Soma();
+}
+
+
+function LoadTotais(){
+  Soma();
 }
 
 function Soma(){

@@ -68,6 +68,11 @@ class NotaFiscal extends Model
         return $this->belongsTo('App\Models\Fornecedor','fornecedorid');
     }
 
+    public function ordemcompra()
+    {
+        return $this->belongsTo('App\Models\OrdemCompra','ordemcompraid');
+    }
+
     public function empresa()
     {
         $sql = "SELECT A.*, B.* from agenda.estabelecimentos A INNER JOIN agenda.municipios B on B.codigo = A.cod_municipio WHERE A.id = '".$this->estabid."'";

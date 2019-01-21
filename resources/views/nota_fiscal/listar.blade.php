@@ -39,38 +39,37 @@
                                 }
                              ?> 
                             <div class="table-responsive">
-                            <form action="{{ action('UsuariosController@create') }}" method="post" id="usuarios_edit">
-                                <table class="table table-striped table-bordered table-hover" id="dataTables-example">
-                                    <thead>
-                                        <tr>
-                                            <th>Nome Fantasia</th>
-                                            <th>Data de Emissão</th>
-                                            <th>Número Nota Fiscal</th>
-                                            <th>Série</th>
-                                            <th>Data Lançamento</th>
-                                            <th>Valor Total Líquido</th>
-                                            <th>Alterar</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                      @if (!empty($table))
-                                         @foreach ($table as $key => $value)
-                                                <tr class="odd gradeX">
-                                                  <td><?php echo "COLOCAR NOME_FANTASIA";?></td>
-                                                  <td><?php echo $value->data_emissao;?></td>
-                                                  <td><?php echo $value->nota_fiscal;?></td>
-                                                  <td><?php echo $value->serie;?></td>
-                                                  <td><?php echo $value->data_lancamento;?></td>
-                                                  <td><?php echo $value->valor_total_liquido;?></td>
-                                                  <td>
-                                                    <a href=""><i class="material-icons">mode_edit</i></a>
-                                                    <a href=""><i class="material-icons">delete</i></a>
-                                                </tr>
-                                        @endforeach
-                                      @endif
-                                       </tbody>
-                                    </table>
-                                </form>
+                              <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                                  <thead>
+                                      <tr>
+                                          <th>Nome Fantasia</th>
+                                          <th>Data de Emissão</th>
+                                          <th>Número Nota Fiscal</th>
+                                          <th>Série</th>
+                                          <th>Data Lançamento</th>
+                                          <th>Valor Total Líquido</th>
+                                          <th>Visualizar</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                    @if (!empty($table))
+                                       @foreach ($table as $key => $value)
+                                              <tr class="odd gradeX">
+                                                <td><?php echo $value->fornecedor->nome_fantasia;?></td>
+                                                <td>{{ date("d/m/Y", strtotime($value->data_emissao)) }}</td>
+                                                <td><?php echo $value->nota_fiscal;?></td>
+                                                <td><?php echo $value->serie;?></td>
+                                                <td>{{ date("d/m/Y", strtotime($value->data_lancamento)) }}</td>
+                                                <td>R$ <?php echo $value->valor_total_liquido;?></td>
+                                                <td>
+                                                    <a href="{{ route('notafiscal.editar', $value->id) }}"><i class="material-icons">mode_edit</i></a>
+                                                    <a href="{{ route('notafiscal.excluir', $value->id) }}"><i class="material-icons">delete</i></a>
+                                                </td>
+                                              </tr>
+                                      @endforeach
+                                    @endif
+                                     </tbody>
+                                  </table>
                             </div>  
                         </div>
                     </div>
@@ -109,23 +108,5 @@ $('#dataTables-example').dataTable({
          ]
     });  
 
-function edita(id) {
-    if (id > 0) {
-        document.getElementById('id').value = id;
-        document.getElementById('usuarios_edit').submit();
-    }
-}
-
-function exclui(id) {
-    var r = confirm("Certeza que quer excluir este registro?");
-    if (r != true) {
-        return false;
-    } 
-    if (id > 0) {
-        document.getElementById('id').value = id;
-        document.getElementById('action').value = "3";
-        document.getElementById('usuarios_edit').submit();
-    }   
-}
 
 </script>
