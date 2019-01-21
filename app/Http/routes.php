@@ -45,6 +45,8 @@ Route::group(['middleware' => ['auth']], function() {
 
 	Route::get('/busca_estabelecimento_agenda/{cnpj}', array('as'=>'estabelecimento_agenda.find', 'uses'=>'NotaFiscalController@find'));
 
+	Route::get('/busca_ordem_compra/{ordemcompra}', array('as'=>'ordem_compra.find', 'uses'=>'OrdemCompraController@findOrdem'));
+
 	//ordemcompra
 	Route::get('/ordemcompra', 'OrdemCompraController@create');
 	Route::post('/ordemcompra', 'OrdemCompraController@create');
@@ -53,6 +55,7 @@ Route::group(['middleware' => ['auth']], function() {
 	//notafiscalservico
 	Route::get('/notafiscal/consulta', array('as'=>'notafiscal.listar', 'uses'=>'NotaFiscalController@listar'));
 	Route::get('/notafiscal', 'NotaFiscalController@create');
+	Route::get('/notafiscal/create', 'NotaFiscalController@store');
 	Route::post('/notafiscal', 'NotaFiscalController@create');
 	Route::post('/notafiscal/create', 'NotaFiscalController@store');
 

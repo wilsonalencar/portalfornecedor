@@ -10,6 +10,7 @@ use App\Models\NotaFiscal;
 use App\Models\ItemNotaFiscal;
 use Auth;
 use DB;
+use Redirect;
 
 class NotaFiscalController extends Controller
 {
@@ -41,9 +42,27 @@ class NotaFiscalController extends Controller
     public function store(Request $request)
     {
         if (!empty($request->all())) {
+            if (!$this->validation($request->all())) {
+
+                $nota_fiscal = new NotaFiscal;
+                $next = $nota_fiscal->getNextNota();
+                $nextSerie = $nota_fiscal->getNextSerie();
+
+                $fornecedor = Fornecedor::where('empresaid', session()->get('seid'))->where('id', Auth::user()->id_fornecedor)->get()->first();
+
+                $query = "SELECT nome, uf FROM ".env('DB_DATABASE1').".municipios WHERE municipios.codigo = '".$fornecedor->cod_municipio."'";
+                $municipios = DB::select($query);
+
+                if (!empty($municipios)) {
+                    $municipios = $municipios[0];
+                }
+
+                $success = false;
+
+                return view('nota_fiscal.create', compact('fornecedor', 'municipios', 'next', 'nextSerie', 'success'))->with('msg', $this->msg);
+            }   
             
             $input = $request->all();
-
             $cnpj = str_replace('/', '', $input['cnpj_cpf']);
             $cnpj = str_replace('.', '', $cnpj);
             $cnpj = str_replace('-', '', $cnpj);
@@ -62,12 +81,34 @@ class NotaFiscalController extends Controller
             $notafiscal = NotaFiscal::create($input);
             $this->saveItemNota($input, $notafiscal->id);
 
+            if (Auth::user()->id_perfilusuario == 4) {
+
+                $nota_fiscal = new NotaFiscal;
+                $next = $nota_fiscal->getNextNota();
+                $nextSerie = $nota_fiscal->getNextSerie();
+
+                $fornecedor = Fornecedor::where('empresaid', session()->get('seid'))->where('id', Auth::user()->id_fornecedor)->get()->first();
+
+                $query = "SELECT nome, uf FROM ".env('DB_DATABASE1').".municipios WHERE municipios.codigo = '".$fornecedor->cod_municipio."'";
+                $municipios = DB::select($query);
+
+                if (!empty($municipios)) {
+                    $municipios = $municipios[0];
+                }
+
+                $success = true;
+                $this->msg[] = 'Nota fiscal cadastrada com sucesso';
+
+                return view('nota_fiscal.create', compact('fornecedor', 'municipios', 'next', 'nextSerie', 'success'))->with('msg', $this->msg);
+            }
 
             $success = true;
             $this->msg[] = 'Nota fiscal cadastrada com sucesso';
 
             return view('nota_fiscal.show', compact('success'))->with('msg', $this->msg);
         }
+        
+        return Redirect::action('NotaFiscalController@create');
     }
 
     public function saveItemNota($dados, $id )
@@ -98,7 +139,7 @@ class NotaFiscalController extends Controller
 
     }
 
-    public function create(Request $request, $id_perfilusuario = 0)
+    public function create(Request $request)
     {
         if (Auth::user()->id_perfilusuario == 4) {
 
@@ -159,7 +200,11 @@ class NotaFiscalController extends Controller
             }   
         }
 
-        return true;
+        if ($status) {
+            return true;        
+        }
+
+        return false;        
     }
 
     public function numero($str) {

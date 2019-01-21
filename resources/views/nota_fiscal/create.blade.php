@@ -84,7 +84,7 @@
                         </div>
                         <div class="col-md-4">
                           <label>Nº ORDEM DE COMPRA: </label>
-                          <input type="number" id="ordemcompra" name="ordemcompra" maxlength="8" value="">
+                          <input type="number" id="ordemcompra" name="ordemcompra" maxlength="8" value="" onblur="buscaOrdemCompra(this.value)">
                         </div>
                     </div>
                   </div>
@@ -330,6 +330,15 @@ function Soma(){
   $('#valor_total_geral').val((valor_total_geral).toFixed(2));
 }
 
+function buscaOrdemCompra(res)
+{
+  if (res != '') {
+    var script = document.createElement('script');
+    script.src = 'http://'+window.location.hostname+'/busca_ordem_compra/'+res;
+    document.body.appendChild(script);
+  }
+}
+
 function buscaEstabelecimentoAgenda(res)
 {
     var cnpj = res.replace('.', "");
@@ -350,6 +359,16 @@ function buscaEstabelecimentoAgenda(res)
     var script = document.createElement('script');
     script.src = 'http://'+window.location.hostname+'/busca_estabelecimento_agenda/'+cnpj;
     document.body.appendChild(script);
+}
+
+function callbackOrdemCompra(existente) {  
+
+   if (existente == 'nao_existente') {
+      alert('Ordem De Compra Não Existente');
+      $("#ordemcompra").val('');
+      return false;
+   }
+   return true;
 }
 
 function callbackAgenda(conteudo) {  

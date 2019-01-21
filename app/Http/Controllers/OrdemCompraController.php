@@ -13,6 +13,19 @@ class OrdemCompraController extends Controller
 {
 	public $msg = array();
 
+    public function findOrdem($ordemcompra)
+    {
+        $ordem_compra = OrdemCompra::where('ordemcompra', $ordemcompra)->first();
+        
+        if (!empty($ordem_compra)) {
+            $value_ordem = 'callbackOrdemCompra("existente")';
+            return $value_ordem;
+        }else{
+           $value_ordem = 'callbackOrdemCompra("nao_existente")'; 
+           return $value_ordem;
+        }
+    }
+
     public function find($cnpj)
     {
         $sql = "SELECT A.id, A.cnpj, A.razao_social, A.cod_municipio from agenda.estabelecimentos A INNER JOIN agenda.empresas B on B.id = A.empresa_id WHERE B.id = '".session()->get('seid')."' AND A.cnpj = '".$cnpj."'";

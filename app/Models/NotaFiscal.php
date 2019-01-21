@@ -36,25 +36,29 @@ class NotaFiscal extends Model
 
     public function getNextNota()
     {
-        $id = DB::table('notafiscal')->orderby('nota_fiscal', 'desc')->orderby('serie', 'desc')->first();
-
-        if (!empty($id)) {
-            $last = DB::table('notafiscal')->orderby('nota_fiscal', 'desc')->first();
-            return $last->nota_fiscal+000.001;
+        $register = DB::table('notafiscal')->orderby('serie', 'desc')->orderby('nota_fiscal', 'desc')->first();
+        if (!empty($register)) {
+            if ($register->nota_fiscal == '9.999') {
+                return '0.001';
+            }
+            return (float)$register->nota_fiscal+0.001;
         } else {
-            return '000.001 ';
+            return '0.001 ';
         }
     }
 
     public function getNextSerie()
     {
-        $id = DB::table('notafiscal')->orderby('nota_fiscal', 'desc')->orderby('serie', 'desc')->first();
+        $register = DB::table('notafiscal')->orderby('serie', 'desc')->orderby('nota_fiscal', 'desc')->first();
+        if (!empty($register) && $register->nota_fiscal == '9.999') {
+            return $register->serie+1;
+        }
 
-        if (!empty($id) && $id->nota_fiscal == 999.999) {
-            $last = DB::table('notafiscal')->orderby('serie', 'desc')->first();
+        if (!empty($register)) {
+            return $register->serie;
+        }
 
-            return $last->serie+1;
-        } else {
+        if (empty($register)) {
             return '1';
         }
     }
