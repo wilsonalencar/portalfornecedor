@@ -94,6 +94,17 @@ class NotaFiscalController extends Controller
 
             $notafiscal = NotaFiscal::create($input);
             $this->saveItemNota($input, $notafiscal->id);
+            $hasfile = $request->hasFile('image');
+            if ($hasfile) {
+                if ($request->file('image')->isValid()) {
+                        
+                    $name = $request->file('image')->getPathName();
+                    $path = 'nota_fiscal/'.$notafiscal->id.'.pdf';
+                    copy($name, $path);
+                    unlink($name);
+                }
+            }
+            
 
             if (Auth::user()->id_perfilusuario == 4) {
 
@@ -263,8 +274,7 @@ class NotaFiscalController extends Controller
             return redirect()->action('NotaFiscalController@listar');
         }
 
-        $fornecedor = Fornecedor::where('id', $notafiscal->fornecedorid)->where('id', Auth::user()->id_fornecedor)->get()->first();
-
+        $fornecedor = Fornecedor::where('id', $notafiscal->fornecedorid)->first();
         $query = "SELECT nome, uf FROM ".env('DB_DATABASE1').".municipios WHERE municipios.codigo = '".$fornecedor->cod_municipio."'";
         
         $municipios = DB::select($query);
@@ -291,15 +301,49 @@ class NotaFiscalController extends Controller
 
             $notafiscal->fill($input);
             $notafiscal->save();
-
             $this->saveItemNota($input, $notafiscal->id, true);
+            $hasfile = $request->hasFile('image');
+            if ($hasfile) {
+                if ($request->file('image')->isValid()) {
+                               
+                    $name = $request->file('image')->getPathName();
+                    $path = 'nota_fiscal/'.$notafiscal->id.'.pdf';
+                    
+                    if (file_exists($path)) {
+                        unlink($path);
+                    }
+
+                    copy($name, $path);
+                    unlink($name);
+                }
+            }
+
 
             $success = true;
             $this->msg[] = 'Nota Fiscal atualizada com sucesso';
 
         }
-
         return view('nota_fiscal.editar', compact('success','fornecedor', 'municipios', 'notafiscal'))->with('msg', $this->msg);
+    }
+
+    public function download($id)
+    {
+        $file = public_path().'/nota_fiscal/'.$id.'.pdf';
+        if (file_exists($file)) {
+            header('Content-Description: File Transfer');
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename='.basename($file));
+            header('Content-Transfer-Encoding: binary');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: ' . filesize($file));
+            ob_clean();
+            flush();
+            readfile($file);
+            exit;
+        }
+
     }
 
     public function destroy($id)

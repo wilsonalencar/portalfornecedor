@@ -28,6 +28,9 @@
                   <div class="row">
                   <div class="col-md-12" id="customers">  
                   <button class="btn btn-danger" onclick="printDiv('pdf')">PDF</button>
+                  <?php if (file_exists(public_path().'/nota_fiscal/'.$notafiscal->id.'.pdf')) { ?>
+                      <a href="{{ route('notafiscal.download', $notafiscal->id) }}" class="btn btn-success">Download Arquivo</a>
+                  <?php   } ?>
                   <br />
                   <br />
                   <div id="pdf">

@@ -13,7 +13,7 @@
       </div>
     
          <div id="page-inner"> 
-         <form id="form" action="{{ action('NotaFiscalController@store') }}" method="post" name="cad_notafiscal">
+         <form id="form" action="{{ action('NotaFiscalController@store') }}" method="post" name="cad_notafiscal" enctype="multipart/form-data">
          <div class="row">
          <div class="col-lg-12">
          <div class="card">
@@ -209,6 +209,13 @@
                             <textarea id="observacao"  class="form-control" type="text" name="observacao" maxlength="255"></textarea>
                         </div>
                       </div>
+                      <div class="row">
+                        <div class="col-md-11">
+                            <label for="observacao">Upload de arquivos</label>
+                            <input type="file" name="image">
+                        </div>
+                      </div>
+
                       <div class="row">
                       <div class="input-field col s1">
                         </div>
