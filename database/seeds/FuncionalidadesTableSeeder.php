@@ -14,7 +14,7 @@ class FuncionalidadesTableSeeder extends Seeder
     {
         DB::table('funcionalidades')->insert([
             'id' => 1,
-            'nome' => 'Usuários',
+            'nome' => 'Usuarios',
             'status' => 'A',
         ]);
 
@@ -32,13 +32,13 @@ class FuncionalidadesTableSeeder extends Seeder
 
         DB::table('funcionalidades')->insert([
             'id' => 4,
-            'nome' => 'Nota Fiscal de Serviço',
+            'nome' => 'Nota Fiscal de Servico',
             'status' => 'A',
         ]);
 
         DB::table('funcionalidades')->insert([
             'id' => 5,
-            'nome' => 'Repositório',
+            'nome' => 'Repositorio',
             'status' => 'A',
         ]);
 

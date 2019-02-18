@@ -96,6 +96,7 @@ class FornecedoresController extends Controller
 
             $input['usuario'] = Auth::user()->email;
             $input['empresaid'] = $empresa->id;
+            $input['cnpj_cpf'] = $this->numero($input['cnpj_cpf']);
             $input['status'] = 'A';
             $input['data_cadastro'] = date('Y-m-d H:i:s');
             $input['data_alteracao'] = date('Y-m-d H:i:s');
@@ -167,8 +168,14 @@ class FornecedoresController extends Controller
 
     public function listar()
     {
-        $table = Fornecedor::where('empresaid', session()->get('seid'))->get();
-        
+        $array = Fornecedor::where('empresaid', session()->get('seid'))->get();
+        $table = array();
+        if (!empty($array)) {
+            foreach ($array as $key => $index) {
+                $table[$key] = $index;
+                $table[$key]['cnpj_cpf'] = $this->maskCNPJCPF($index->cnpj_cpf);
+           }       
+        }   
         return view('fornecedores.listar')->with('table', $table);
     }
 
@@ -187,6 +194,7 @@ class FornecedoresController extends Controller
                 return view('fornecedores.editar', compact('municipios','success', 'fornecedor'))->with('msg', $this->msg);
             }
 
+            $input['cnpj_cpf'] = $this->numero($input['cnpj_cpf']);
             $fornecedor->fill($input);
             $fornecedor->data_alteracao = date('Y-m-d H:i:s');
             $fornecedor->save();
@@ -200,6 +208,10 @@ class FornecedoresController extends Controller
 
         return view('fornecedores.editar', compact('municipios','success', 'fornecedor'));
     }
+    
+    public function numero($str) {
+        return preg_replace("/[^0-9]/", "", $str);
+    }
 
     public function destroy($id)
     { 
@@ -207,6 +219,13 @@ class FornecedoresController extends Controller
             $success = true;
             
             $fornecedor = Fornecedor::findOrFail($id);
+
+            if (!Fornecedor::CheckToDelete($id)) {
+                $success = false;
+                $table = Fornecedor::where('empresaid', session()->get('seid'))->get();
+                return view('fornecedores.listar', compact('table', 'success'))->with('msg', 'Não é possível excluir um fornecedor com notas fiscais, ordem de compra ou usuários cadastrados para o mesmo.');
+            
+            }
 
             Fornecedor::destroy($id);
             $table = Fornecedor::where('empresaid', session()->get('seid'))->get();

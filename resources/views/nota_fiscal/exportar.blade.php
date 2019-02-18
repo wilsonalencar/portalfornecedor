@@ -61,23 +61,6 @@
                                     <td>R$ <?php echo number_format($value->vlr_outros, 2, ',', '.');?></td>
                                     <td>R$ <?php echo number_format($value->vlr_inss, 2, ',', '.');?></td>
                                   </tr>
-                                  <tr class="odd gradeX" style="display:none">
-                                    <td></td>
-                                    <td>&nbsp;</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                  </tr>
                           @endforeach
                         @endif
                        </tbody>
@@ -118,33 +101,16 @@
                                     <td><?php echo $item->descricao;?></td>
                                     <td>R$ <?php echo number_format($item->valor_unitario_item, 2, ',', '.');?></td>
                                     <td>R$ <?php echo number_format($item->valor_total_item, 2, ',', '.');?></td>
-                                    <td>R$ <?php echo number_format($item->alq_iss, 2, ',', '.');?></td>
+                                    <td><?php echo $item->alq_iss; ?></td>
                                     <td>R$ <?php echo number_format($item->vlr_iss, 2, ',', '.');?></td>
-                                    <td>R$ <?php echo number_format($item->alq_irrf, 2, ',', '.');?></td>
+                                    <td><?php echo $item->alq_irrf; ?></td>
                                     <td>R$ <?php echo number_format($item->vlr_irrf, 2, ',', '.');?></td>
-                                    <td>R$ <?php echo number_format($item->alq_outros, 2, ',', '.');?></td>
+                                    <td><?php echo $item->alq_outros; ?></td>
                                     <td>R$ <?php echo number_format($item->vlr_outros, 2, ',', '.');?></td>
-                                    <td>R$ <?php echo number_format($item->alq_inss, 2, ',', '.');?></td>
+                                    <td><?php echo $item->alq_inss; ?></td>
                                     <td>R$ <?php echo number_format($item->vlr_inss, 2, ',', '.');?></td>
                                   </tr>
                             @endforeach
-                            <tr class="odd gradeX" style="display:none">
-                              <td></td>
-                              <td>&nbsp;</td>
-                              <td></td>
-                              <td></td>
-                              <td></td>
-                              <td></td>
-                              <td></td>
-                              <td></td>
-                              <td></td>
-                              <td></td>
-                              <td></td>
-                              <td></td>
-                              <td></td>
-                              <td></td>
-                              <td></td>
-                            </tr>
                           @endforeach
                         @endif
                        </tbody>

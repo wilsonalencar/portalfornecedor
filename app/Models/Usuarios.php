@@ -54,7 +54,7 @@ class Usuarios extends Authenticatable
     private function InsertUserInPlatform($input)
     {
         DB::TABLE('plataforma.plataformausuario')->insert([
-            'nome' => $input['nome'],
+            'nome' => utf8_encode($input['nome']),
             'email' => $input['email'],
             'id_perfilusuario' => 7,
             'id_responsabilidade' => 0,
@@ -71,7 +71,7 @@ class Usuarios extends Authenticatable
         if ($input['reset_senha'] == 'S') {
             DB::TABLE('plataforma.plataformausuario')->where('email', $email)
             ->update([
-                'nome' => $input['nome'],
+                'nome' => utf8_encode($input['nome']),
                 'email' => $input['email'],
                 'id_responsabilidade' => 0,
                 'reset_senha' => $input['reset_senha'],
@@ -83,7 +83,7 @@ class Usuarios extends Authenticatable
         } else {
             DB::TABLE('plataforma.plataformausuario')->where('email', $email)
             ->update([
-                'nome' => $input['nome'],
+                'nome' => utf8_encode($input['nome']),
                 'email' => $input['email'],
                 'status' => $input['status'],
                 'usuario' => Auth::User()->email,

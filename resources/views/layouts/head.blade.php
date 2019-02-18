@@ -23,6 +23,7 @@
 
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+
 </head>
 
     <body>
@@ -36,7 +37,8 @@
                         <span class="icon-bar"></span>
                     </button>
                     <a class="navbar-brand waves-effect waves-dark" href="{!! route('forcelogout') !!}">
-                        <img src="/assets/img/bravo-icon.png">
+                        
+                        <img src="<?php echo env('IMAGE_LINK');?>bravo-icon.png">
                     </a>
     				
     		<div id="sideNav" href=""><i class="material-icons dp48">toc</i></div>
@@ -48,14 +50,9 @@
             </nav>
     		<!-- Dropdown Structure -->
     <ul id="dropdown1" class="dropdown-content">
-        <li><a href="{{ route('logout') }}"
-       onclick="event.preventDefault();
-                     document.getElementById('logout-form').submit();">
+        <li><a href="{{ route('forcelogoutall') }}">
         <i class="fa fa-sign-out fa-fw"></i> Logout</a>
         </li>
-        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-            @csrf
-        </form>
         <li><a href="{!! route('forcelogout') !!}"><i class="fa fa-sign-in fa-fw"></i> Plataforma</a>
         </li>
     </ul>

@@ -47,7 +47,7 @@
                       </div>
                     </div>
 
-                    <form class="col s12" action="" method="post" id="form" name="cad_ordem">
+                    <form class="col s12" action="{{ action('OrdemCompraController@create') }}" method="post" id="form" name="cad_ordem">
                       <input type="hidden" name="id" id="id_ordemcompra">
                       <div class="row">
                         <input type="hidden" name="_token" value="{!! csrf_token(); !!}"> 
@@ -194,7 +194,7 @@ function confirmdelete(id)
 {
   var r = confirm("Você tem certeza de que quer excluir esse registro ?");
   if (r == true) {
-    window.location.href = 'http://'+window.location.hostname+'/ordemcompra/delete/'+id;
+    window.location.href = 'http://'+window.location.hostname+'/portalfornecedor/public/portalfornecedor/ordemcompra/delete/'+id;
   }
 
 }
@@ -218,7 +218,7 @@ function buscaFornecedor(id)
     }
     
     var script = document.createElement('script');
-    script.src = 'http://'+window.location.hostname+'/busca_fornecedor/'+id;
+    script.src = 'http://'+window.location.hostname+'/portalfornecedor/public/portalfornecedor/busca_fornecedor/'+id;
     document.body.appendChild(script);
 }
 
@@ -264,7 +264,7 @@ function buscaFornecedorAgenda(res)
     } 
     
     var script = document.createElement('script');
-    script.src = 'http://'+window.location.hostname+'/busca_fornecedor_agenda/'+cnpj;
+    script.src = 'http://'+window.location.hostname+'/portalfornecedor/public/portalfornecedor/busca_fornecedor_agenda/'+cnpj;
     document.body.appendChild(script);
 }
 

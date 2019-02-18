@@ -75,10 +75,10 @@
                       <br>
                       MOD.4<br>
                         <br>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                           <p></p>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                           <label>VALIDADE: </label>
                           <input type="date" id="validade" name="data_lancamento" maxlength="8" value="{{ $notafiscal->data_lancamento }}" class="obrigatorio_data_lancamento">
                         </div>
@@ -96,11 +96,11 @@
                         <input type="hidden" id="perfilusuario" name="perfilusuario" value="{{ Auth::user()->id_perfilusuario }}">
                         <div class="col-md-2">
                         <label for="nota_fiscal">Número Nota Fiscal</label>
-                          <input type="text" name="nota_fiscal" readonly="true" value="{{ $notafiscal->nota_fiscal }}">
+                          <input type="text" name="nota_fiscal" value="{{ $notafiscal->nota_fiscal }}">
                         </div>
                         <div class="col-md-1">
                         <label for="serie">Série</label>
-                          <input type="text" name="serie" value="{{ $notafiscal->serie }}" readonly="true">
+                          <input type="text" name="serie" value="{{ $notafiscal->serie }}">
                         </div>
                         <div class="col-md-1">
                           <p></p>
@@ -108,7 +108,7 @@
                         <div class="col-md-3">
                         <label for="cnpj_cpf">CNPJ/CPF</label>
                           <input type="text" id="cnpj_cpf" name="cnpj_cpf" maxlength="18" onkeypress="mask(this,val_cnpj)" class="validate" onblur="buscaEstabelecimentoAgenda(this.value)" value="{{ $notafiscal->empresa()->cnpj }}">
-                          <input type="hidden" name="estabid" value="">
+                          <input type="hidden" name="estabid" id="estabid" value="{{ $notafiscal->estabid }}">
                         </div>
                         <div class="col-md-11" align="left">
                         <label for="razao_social">Tomador do Serviço</label>
@@ -154,27 +154,43 @@
                             <label for="quantidade">Quantidade</label>
                               <input type="text" id="quantidade[<?php echo $k; ?>]" name="servicos[<?php echo $k; ?>][quantidade]" class="validate obrigatorio_quantidade" maxlength="255" value="{{ $item->quantidade }}" onblur="calcular(0, 1)">
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                               <label for="descricao">Descrição</label>
                               <input type="text" id="descricao[<?php echo $k; ?>]" name="servicos[<?php echo $k; ?>][descricao]" class="validate obrigatorio_descricao" maxlength="255" value="{{ $item->descricao }}">
                             </div>
-                            <div class="col-md-2">
-                              <label for="p_unit">P.UNIT</label>
-                              <input type="text" id="p_unit[<?php echo $k; ?>]" name="servicos[<?php echo $k; ?>][valor_unitario_item]" class="validate obrigatorio_p_unit" maxlength="255" value="{{ $item->valor_unitario_item }}" onblur="calcular(0, 2)">
+                            <div class="col-md-1">
+                              <label for="vlr_iss">ISS (R$)</label>
+                              <input type="text" id="vlr_iss[<?php echo $k; ?>]" name="servicos[<?php echo $k; ?>][vlr_iss]" class="validate obrigatorio_impostos iss" maxlength="255"  onblur="decimal(this)" value="{{ $item->vlr_iss }}" onblur="calcular(0, 2)">
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-1">
+                              <label for="vlr_irrf">IRRF (R$)</label>
+                              <input type="text" id="vlr_irrf[<?php echo $k; ?>]" name="servicos[<?php echo $k; ?>][vlr_irrf]" class="validate obrigatorio_impostos irrf" maxlength="255"   onblur="decimal(this)" value="{{ $item->vlr_irrf }}" onblur="calcular(0, 2)">
+                            </div>
+                            <div class="col-md-1">
+                              <label for="vlr_inss">INSS (R$)</label>
+                              <input type="text" id="vlr_inss[<?php echo $k; ?>]" name="servicos[<?php echo $k; ?>][vlr_inss]" class="validate obrigatorio_impostos inss" maxlength="255"  onblur="decimal(this)" value="{{ $item->vlr_inss }}" onblur="calcular(0, 2)">
+                            </div>
+                            <div class="col-md-1">
+                              <label for="vlr_outros">OUTROS (R$)</label>
+                              <input type="text" id="vlr_outros[<?php echo $k; ?>]" name="servicos[<?php echo $k; ?>][vlr_outros]" class="validate obrigatorio_impostos outros" maxlength="255"  onblur="decimal(this)" value="{{ $item->vlr_outros }}" onblur="calcular(0, 2)">
+                            </div>
+                            <div class="col-md-1">
+                              <label for="p_unit">P.UNIT</label>
+                              <input type="text" id="p_unit[<?php echo $k; ?>]" name="servicos[<?php echo $k; ?>][valor_unitario_item]" class="validate obrigatorio_p_unit" maxlength="255" value="{{ $item->valor_unitario_item }}" onblur="calcular(0, 2)" onblur="decimal(this)" >
+                            </div>
+                            <div class="col-md-1">
                               <label for="total">Total</label>
                               <input type="text" id="total[<?php echo $k; ?>]" class="validate totais" name="servicos[<?php echo $k; ?>][valor_total_item]" maxlength="255" value="{{ $item->valor_total_item }}" readonly="true">
                             </div>
                             @if($k != 0)
                               <div class="col-md-1">
-                                <a href='#' style='color:red' onclick="removeLinha(<?php echo $k; ?>)">[ remover ]</a>
+                                <a href='#' style='color:red' onclick="removeLinha(<?php echo $k; ?>)">[ X ]</a>
                               </div>
                             @endif
                             @if($k == 0)
                             <div class="col-md-1">
                               <br>
-                                <a href=# style=color:green id="add">[ adicionar ]</a>
+                                <a href=# style=color:green id="add">[ + ]</a>
                             </div>
                             @endif
                           </div>
@@ -193,6 +209,7 @@
                             <label for="valor_iss">Retenção do ISS Na Fonte</label>
                             <input type="text" id="valor_iss" name="vlr_iss" maxlength="255" value="" readonly="true">
                             <input type="hidden" id="valor_irrf" name="vlr_irrf" value="">
+                            <input type="hidden" id="valor_inss" name="vlr_inss" value="">
                         </div>
                         <div class="col-md-1">
                           <p></p>
@@ -252,9 +269,16 @@
 window.onload = LoadTotais();
 $i = <?php echo $k; ?>;
 
-$("#add").click(function(){
+function LoadTotais(){
+  Soma();
+}
 
-    $i++;
+function formataDinheiro(n) {
+return n.toFixed(2).replace('.', ',').replace(/(\d)(?=(\d{3})+\,)/g, "$1.");
+}
+
+$("#add").click(function(){
+  $i++;
    $servicos = $("#servicos");
    $container = '<div class="row" id="'+$i+'">' 
 
@@ -268,28 +292,50 @@ $("#add").click(function(){
                   +'<input type="text" id="quantidade['+$i+']" onblur="calcular('+$i+', 1)" name="servicos['+$i+'][quantidade]" class="validate" maxlength="255" value="">'
                 +'</div>'
 
-                +'<div class="col-md-4">'
+                +'<div class="col-md-3">'
                   +'<label for="descricao">Descrição</label>'
-                  +'<input type="text" id="descricao['+$i+']" name="servicos['+$i+'][descricao]" class="validate" maxlength="255" value="">'
+                    +'<input type="text" id="descricao['+$i+']" name="servicos['+$i+'][descricao]" class="validate" maxlength="255" value="">'
                 +'</div>'
 
-                +'<div class="col-md-2">'
+                +'<div class="col-md-1">'
+                  +'<label for="vlr_iss">ISS (R$)</label>'
+                  +'<input type="text" id="vlr_iss['+$i+']" name="servicos['+$i+'][vlr_iss]" class="validate obrigatorio_impostos iss" onblur="decimal(this)" maxlength="255" value="0.00" onblur="calcular(0, 2)">'
+                +'</div>'
+                
+                +'<div class="col-md-1">'
+                  +'<label for="vlr_irrf">IRRF (R$)</label>'
+                  +'<input type="text" id="vlr_irrf['+$i+']" name="servicos['+$i+'][vlr_irrf]" class="validate obrigatorio_impostos irrf" onblur="decimal(this)" maxlength="255" value="0.00" onblur="calcular(0, 2)">'
+                +'</div>'
+                
+                +'<div class="col-md-1">'
+                  +'<label for="vlr_inss">INSS (R$)</label>'
+                  +'<input type="text" id="vlr_inss['+$i+']" name="servicos['+$i+'][vlr_inss]" class="validate obrigatorio_impostos inss" onblur="decimal(this)" maxlength="255" value="0.00" onblur="calcular(0, 2)">'
+                +'</div>'
+                
+                +'<div class="col-md-1">'
+                  +'<label for="vlr_outros">OUTROS (R$)</label>'
+                  +'<input type="text" id="vlr_outros['+$i+']" name="servicos['+$i+'][vlr_outros]" class="validate obrigatorio_impostos outros" onblur="decimal(this)" maxlength="255" value="0.00" onblur="calcular(0, 2)">'
+                +'</div>'
+
+                +'<div class="col-md-1">'
                   +'<label for="p_unit">P.UNIT</label>'
-                  +'<input type="text" id="p_unit['+$i+']" onblur="calcular('+$i+', 2)" name="servicos['+$i+'][valor_unitario_item]" class="validate" maxlength="255" value="" >'
+                  +'<input type="text" id="p_unit['+$i+']" onblur="calcular('+$i+', 2)" name="servicos['+$i+'][valor_unitario_item]" class="validate" maxlength="255" value="" onblur="decimal(this)" >'
                 +'</div>'
 
-                +'<div class="col-md-2">'
+                +'<div class="col-md-1">'
                   +'<label for="total">Total</label>'
                   +'<input type="text" id="total['+$i+']" class="totais" name="servicos['+$i+'][valor_total_item]" maxlength="255" value="" readonly="true">'
                 +'</div>'
 
                 +'<div class="col-md-1">'
-                  +'<a href=# style=color:red onclick=removeLinha('+$i+')>[ remover ]</a>'
+                  +'<a href=# style=color:red onclick=removeLinha('+$i+')>[ X ]</a>'
                 +'</div>'
 
             +'</div>';
 
        $servicos.append($container);
+       $i++;
+
 });
 
 function removeLinha(id)
@@ -306,12 +352,12 @@ function calcular(id, parametro) {
         if (document.getElementById(new_id) == null) {
           var p_unitario = 0;    
         } else {
-          var p_unitario = document.getElementById(new_id).value;    
+          var p_unitario = mascarasmoney(document.getElementById(new_id).value);    
         }
     }
 
     if (parametro == 2) {
-        var p_unitario = document.getElementById('p_unit['+id+']').value;
+        var p_unitario = mascarasmoney(document.getElementById('p_unit['+id+']').value);
           
         var new_id = 'quantidade['+id+']';
         if (document.getElementById(new_id) == null) {
@@ -320,15 +366,10 @@ function calcular(id, parametro) {
           var quantidade = document.getElementById(new_id).value;
         }
     }
-
-    document.getElementById('p_unit['+id+']').value = (p_unitario*1).toFixed(2);
+    
+    document.getElementById('p_unit['+id+']').value = (p_unitario*1);
     document.getElementById('total['+id+']').value = (quantidade*p_unitario).toFixed(2);
     Soma();
-}
-
-
-function LoadTotais(){
-  Soma();
 }
 
 function Soma(){
@@ -340,28 +381,131 @@ function Soma(){
       soma += parseFloat(valorItem);
   });
 
-  var valor_iss = soma*0.02;
-  var valor_irrf = soma*0.015;
-  var valor_pis = soma*0.0465;
-  var total_outras_ret = valor_irrf + valor_pis;
-  var total_iss = soma-valor_iss;
+  var valor_iss = getISS();
+  var valor_irrf = getIRRF();
+  var valor_inss = getINSS();
+  var total_outras_ret = getINSSOUTROS();
 
-  var valor_total_geral = soma-valor_iss-total_outras_ret;
+  var valor_impostos = (valor_iss*1 + valor_irrf*1 + total_outras_ret*1);
+  var valor_total_geral = soma-valor_impostos;
 
   $('#valor_total').val((soma).toFixed(2));
   $('#valor_iss').val((valor_iss).toFixed(2));
   $('#valor_irrf').val((valor_irrf).toFixed(2));
+  $('#valor_inss').val((valor_inss).toFixed(2));
   $('#valor_outras_ret').val((total_outras_ret).toFixed(2));
   $('#valor_total_geral').val((valor_total_geral).toFixed(2));
+}
+function getINSS()
+{
+  var soma_1 = 0;
+  $('.inss').each(function(){
+    var valorItem_1 = parseFloat(mascarasmoney($(this).val()));
+
+    if(!isNaN(valorItem_1))
+      soma_1 += parseFloat(valorItem_1);
+  });
+  return soma_1;
+}
+
+
+function getISS()
+{
+  var soma = 0;
+  $('.iss').each(function(){
+    var valorItem = parseFloat(mascarasmoney($(this).val()));
+
+    if(!isNaN(valorItem))
+      soma += parseFloat(valorItem);
+  });
+
+  return soma;
+}
+
+function getIRRF()
+{
+  var soma = 0;
+  $('.irrf').each(function(){
+    var valorItem = parseFloat(mascarasmoney($(this).val()));
+
+    if(!isNaN(valorItem))
+      soma += parseFloat(valorItem);
+  });
+
+  return soma;
+}
+
+function getINSSOUTROS()
+{
+  var soma_1 = 0;
+  $('.inss').each(function(){
+    var valorItem_1 = parseFloat(mascarasmoney($(this).val()));
+
+    if(!isNaN(valorItem_1))
+      soma_1 += parseFloat(valorItem_1);
+  });
+
+  var soma_2 = 0;
+  $('.outros').each(function(){
+    var valorItem_2 = parseFloat(mascarasmoney($(this).val()));
+
+    if(!isNaN(valorItem_2))
+      soma_2 += parseFloat(valorItem_2);
+  });
+
+  var soma_3 = 0;
+  $('.irrf').each(function(){
+    var valorItem_3 = parseFloat(mascarasmoney($(this).val()));
+
+    if(!isNaN(valorItem_3))
+      soma_3 += parseFloat(valorItem_3);
+  });
+
+  var soma = (soma_1*1 + soma_2*1 + soma_3*1);
+  return soma;
+
+}
+
+function moeda(z){
+v = z.value;
+v=v.replace(/\D/g,"")
+v=v.replace(/(\d{1})(\d{13})$/,"$1.$2")
+v=v.replace(/(\d{1})(\d{10})$/,"$1.$2")
+v=v.replace(/(\d{1})(\d{7})$/,"$1.$2")
+v=v.replace(/(\d{1})(\d{4})$/,"$1.$2")
+v=v.replace(/(\d{1})(\d{1,1})$/,"$1,$2")
+z.value = v;
+}
+
+function decimal(z){
+  v = z.value;
+  v = (v*1).toFixed(2);
+  z.value = v;
+}
+
+function mascarasmoney(value){
+    if (value == '') {
+      return 0;
+    }
+    return value;
 }
 
 function buscaOrdemCompra(res)
 {
+  var estabid = document.getElementById('estabid').value;
+
+  if (estabid === '' || estabid === 0) {
+    alert('Favor informar o estabelecimento antes de buscar a ordem de compra');
+    $("#ordemcompra").val('');
+    return false;
+  }
+
   if (res != '') {
     var script = document.createElement('script');
-    script.src = 'http://'+window.location.hostname+'/busca_ordem_compra/'+res;
+    script.src = 'http://'+window.location.hostname+'/portalfornecedor/public/portalfornecedor/busca_ordem_compra/'+res+'/'+estabid;
     document.body.appendChild(script);
   }
+
 }
 
 function buscaEstabelecimentoAgenda(res)
@@ -382,14 +526,14 @@ function buscaEstabelecimentoAgenda(res)
     } 
     
     var script = document.createElement('script');
-    script.src = 'http://'+window.location.hostname+'/busca_estabelecimento_agenda/'+cnpj;
+    script.src = 'http://'+window.location.hostname+'/portalfornecedor/public/portalfornecedor/busca_estabelecimento_agenda/'+cnpj;
     document.body.appendChild(script);
 }
 
 function callbackOrdemCompra(existente) {  
 
    if (existente == 'nao_existente') {
-      alert('Ordem De Compra Não Existente');
+      alert('Ordem De Compra Não cadastrada para o estabelecimento ou não existente');
       $("#ordemcompra").val('');
       return false;
    }
@@ -399,6 +543,7 @@ function callbackOrdemCompra(existente) {
 function callbackAgenda(conteudo) {  
 
    if (conteudo.id > 0) { 
+      $("#estabid").val(conteudo.id);
       $("#razao_social").val(conteudo.razao_social);
       $("#endereco").val(conteudo.endereco);
       $("#num_endereco").val(conteudo.num_endereco);
@@ -407,6 +552,7 @@ function callbackAgenda(conteudo) {
       $("#insc_municipal").val(conteudo.insc_municipal);
    } else {
       alert('CNPJ não encontrado');  
+      $("#estabid").val('');
       $("#razao_social").val('');
       $("#endereco").val('');
       $("#num_endereco").val('');
@@ -456,6 +602,16 @@ $("#form").submit(function() {
         alert('Informar o Preço Unitário');      
         return false;
     }
+
+    if($(".obrigatorio_impostos").val()== null || $(".obrigatorio_impostos").val() ==""){
+        alert('Informar os valores dos impostos');      
+        return false;
+    }
 });
+
+
+window.onload = function(){
+document.getElementById("sideNav").click();
+}
 
 </script>

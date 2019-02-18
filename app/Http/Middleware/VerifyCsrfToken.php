@@ -12,7 +12,7 @@ class VerifyCsrfToken extends BaseVerifier
      * @var array
      */
     protected $except = [
-        '/login',
-        '/logout'
+        '/portalfornecedor/login',
+        '/portalfornecedor/logout'
     ];
 }

@@ -1,5 +1,5 @@
 <?php 
-header('location:http://dev.platform/login.php');exit;
+header('location: http://homo-bravoplataforma.bravobpo.com.br/login.php');exit;
 ?>
 @extends('layouts.app')
 

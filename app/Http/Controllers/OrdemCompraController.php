@@ -13,9 +13,9 @@ class OrdemCompraController extends Controller
 {
 	public $msg = array();
 
-    public function findOrdem($ordemcompra)
+    public function findOrdem($ordemcompra, $estabid = false)
     {
-        $ordem_compra = OrdemCompra::where('ordemcompra', $ordemcompra)->first();
+        $ordem_compra = OrdemCompra::where('ordemcompra', $ordemcompra)->where('estabid', $estabid)->first();
         
         if (!empty($ordem_compra)) {
             $value_ordem = 'callbackOrdemCompra("existente")';

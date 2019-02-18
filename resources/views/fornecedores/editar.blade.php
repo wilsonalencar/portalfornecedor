@@ -50,13 +50,13 @@
                     <form class="col s12" action="{{ route('fornecedor.editar', $fornecedor->id) }}" method="post" name="cad_fornecedor">
                       <div class="row">
                         <input type="hidden" name="_token" value="{!! csrf_token(); !!}"> 
-                        <div class="col s3">
+                        <div class="col s6">
                         <label for="razao_social">Razão Social</label>
                           <input id="razao_social" type="text" name="razao_social" maxlength="255" class="validate" value="{{$fornecedor->razao_social}}">
                         </div>
                       </div>
                       <div class="row">
-                        <div class="col s6">
+                        <div class="col s3">
                         <label for="nome_fantasia">Nome Fantasia</label>
                           <input type="text" id="nome_fantasia" name="nome_fantasia" class="validate" maxlength="30" value="{{$fornecedor->nome_fantasia}}">
                         </div>
@@ -77,7 +77,7 @@
                       <div class="row">
                         <div class="col s3">
                         <label for="cnpj_cpf">CNPJ/CPF</label>
-                          <input type="text" id="cnpj_cpf" name="cnpj_cpf" value="{{$fornecedor->cnpj_cpf}}" maxlength="18" onkeypress="mask(this,val_cnpj)" class="validate">
+                          <input type="text" id="cpfcnpj" name="cnpj_cpf" value="{{$fornecedor->cnpj_cpf}}" maxlength="18" class="validate">
                         </div>
                       </div>
                       <div class="row">
@@ -177,3 +177,31 @@
                   </div>
             </div>
       </div>
+
+      <script type="text/javascript">
+        $("#cpfcnpj").keydown(function(){
+          try {
+            $("#cpfcnpj").unmask();
+          } catch (e) {}
+          
+          var tamanho = $("#cpfcnpj").val().length;
+        
+          if(tamanho < 11){
+              $("#cpfcnpj").mask("999.999.999-99");
+          } else if(tamanho >= 11){
+              $("#cpfcnpj").mask("99.999.999/9999-99");
+          }
+          
+          // ajustando foco
+          var elem = this;
+          setTimeout(function(){
+            // mudo a posição do seletor
+            elem.selectionStart = elem.selectionEnd = 10000;
+          }, 0);
+          // reaplico o valor para mudar o foco
+          var currentValue = $(this).val();
+          $(this).val('');
+          $(this).val(currentValue);
+      });
+
+      </script>

@@ -38,7 +38,6 @@ class UsuariosController extends Controller
                         /*'Privilegios'       => $privilegios*/
                     ]
                 );
-
                 return redirect('index');
            }
         } 
@@ -135,23 +134,9 @@ class UsuariosController extends Controller
         $empresasArray = array();
         $i = 0;
         foreach($empresas as $key => $empresa) {
-
-            $s = DB::select("SELECT 
-                        COUNT(1) as ct 
-                    FROM
-                        permissaoempresas A
-                    INNER JOIN 
-                        usuarios B on A.id_usuario = B.usuarioid
-                    WHERE 
-                        B.usuarioid = '".Auth::user()->usuarioid."'
-                    AND
-                        A.id_empresa = ".$empresa->id."
-                ");
-            if ($s[0]->ct) {
-                $empresasArray[$i]['id'] = $empresa->id;
-                $empresasArray[$i]['razao_social'] = $empresa->razao_social;
-                $i ++;
-            }
+            $empresasArray[$i]['id'] = $empresa->id;
+            $empresasArray[$i]['razao_social'] = $empresa->razao_social;
+            $i ++;
         }
         return $empresasArray;
     }
@@ -213,8 +198,39 @@ class UsuariosController extends Controller
 
     public function listar()
     {
-        $table = Usuarios::All();
+        $table = array();
+        $usuario = Usuarios::Find(Auth::user()->usuarioid);
+        //if ($usuario->perfil->id == 2) {
+        if (2 == 2) {
+            $empresas_user_query = "SELECT id_empresa FROM permissaoempresas where id_usuario =".$usuario->usuarioid;
+            $empresas_user = DB::select($empresas_user_query);
+            if (!empty($empresas_user)) {
+                $table = $this->listarToGerente($empresas_user);
+            }
+        } else {
+            $table = Usuarios::All();
+        }
+
         return view('usuarios.listar')->with('table', $table);
+    }
+
+    public function listarToGerente($ids)
+    {
+        $userID = array();
+
+        foreach ($ids as $x => $empresa) {
+            $userID = PermissaoEmpresas::Where('id_empresa', $empresa->id_empresa)->get();
+        }
+
+        $usuarios_ids = array();
+        if (!empty($userID)) {
+            foreach ($userID as $x => $single_usuario) {
+                $usuarios_ids[] = $single_usuario->id_usuario; 
+            }
+        }
+
+        $table = Usuarios::whereIn('usuarioid', $usuarios_ids)->get();
+        return $table;
     }
 
     public function editar($id, Request $request)
@@ -231,8 +247,6 @@ class UsuariosController extends Controller
 
                 return view('usuarios.editar', compact('empresas','perfis', 'success', 'usuario'))->with('msg', $this->msg);
             }
-
-
 
             PermissaoEmpresas::Where('id_usuario', $usuario->usuarioid)->delete();
             

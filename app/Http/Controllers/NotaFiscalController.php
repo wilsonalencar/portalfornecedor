@@ -56,6 +56,7 @@ class NotaFiscalController extends Controller
     public function store(Request $request)
     {
         if (!empty($request->all())) {
+
             if (!$this->validation($request->all())) {
 
                 $nota_fiscal = new NotaFiscal;
@@ -90,7 +91,6 @@ class NotaFiscalController extends Controller
             $input['estabid'] = $estabelecimento[0]->id;
             $input['empresaid'] = session()->get('seid');
             $input['ordemcompraid'] = $ordemcompra[0]->id;   
-
 
             $notafiscal = NotaFiscal::create($input);
             $this->saveItemNota($input, $notafiscal->id);
@@ -136,6 +136,10 @@ class NotaFiscalController extends Controller
         return Redirect::action('NotaFiscalController@create');
     }
 
+    private function porcentagem ( $parcial, $total ) {
+        return ( $parcial * 100 ) / $total;
+    }
+
     public function saveItemNota($dados, $id, $edit = false)
     {
         $item_nota = new ItemNotaFiscal;
@@ -147,19 +151,24 @@ class NotaFiscalController extends Controller
 
         $item_nota = array();
         foreach ($servicos as $key => $item) {
-            $item_nota['alq_irrf'] = 0.015;
-            $item_nota['valor_unitario_item'] = $item['valor_unitario_item'];
+            $item_nota['valor_unitario_item'] = str_replace(',', '.', str_replace('.', '', $item['valor_unitario_item']));
             $item_nota['valor_total_item'] = $item['valor_total_item'];
-            $item_nota['vlr_irrf'] = $item_nota['valor_unitario_item'] * $item_nota['alq_irrf'];
             $item_nota['notafiscal_id'] = $id;
             $item_nota['quantidade'] = $item['quantidade'];
             $item_nota['unidade'] = $item['unidade'];
             $item_nota['descricao'] = $item['descricao'];
-            $item_nota['alq_iss'] = 0.02;
-            $item_nota['vlr_iss'] = $item_nota['valor_unitario_item'] * $item_nota['alq_iss'];
 
-            $item_nota['vlr_outros'] = 0;
+            $item_nota['vlr_irrf'] = str_replace(',', '.', str_replace('.', '', $item['vlr_irrf']));
+            $item_nota['alq_irrf'] = $this->porcentagem($item_nota['vlr_irrf'], $item_nota['valor_total_item']);
+            $item_nota['vlr_iss'] = str_replace(',', '.', str_replace('.', '', $item['vlr_iss']));
+            $item_nota['alq_iss'] = $this->porcentagem($item_nota['vlr_iss'], $item_nota['valor_total_item']);
 
+            $item_nota['vlr_outros'] = str_replace(',', '.', str_replace('.', '', $item['vlr_outros']));
+            $item_nota['alq_outros'] = $this->porcentagem($item_nota['vlr_outros'], $item_nota['valor_total_item']);;
+
+            $item_nota['vlr_inss'] = str_replace(',', '.', str_replace('.', '', $item['vlr_inss']));
+            $item_nota['alq_inss'] = $this->porcentagem($item_nota['vlr_inss'], $item_nota['valor_total_item']);;
+            
             ItemNotaFiscal::create($item_nota);
         }
 
@@ -218,7 +227,7 @@ class NotaFiscalController extends Controller
     {
         $status = true;
         if (!empty($input['nota_fiscal'])) {
-            $notafiscal = NotaFiscal::Where('nota_fiscal', $input['nota_fiscal'])->where('serie', $input['serie'])->first();
+            $notafiscal = NotaFiscal::Where('nota_fiscal', $input['nota_fiscal'])->where('serie', $input['serie'])->where('fornecedorid', $input['fornecedorid'])->where('estabid', $input['estabid']) ->first();
         }
         if (!empty($notafiscal)) {
             $this->msg[] = 'Nota Fiscal Já Cadastrada';
@@ -259,7 +268,14 @@ class NotaFiscalController extends Controller
     public function show($id)
     {
         $table = NotaFiscal::findOrFail($id);
-        return view('nota_fiscal.repositorio_show')->with('notafiscal', $table);
+        $query = "SELECT nome, uf FROM ".env('DB_DATABASE1').".municipios WHERE municipios.codigo = '".$table->empresa()->cod_municipio."'";
+        
+        $municipios = DB::select($query);
+
+        if (!empty($municipios)) {
+            $municipios = $municipios[0];
+        }
+        return view('nota_fiscal.repositorio_show')->with('notafiscal', $table)->with('municipios', $municipios);
     }
 
     public function editar($id, Request $request)
@@ -301,6 +317,7 @@ class NotaFiscalController extends Controller
 
             $notafiscal->fill($input);
             $notafiscal->save();
+            
             $this->saveItemNota($input, $notafiscal->id, true);
             $hasfile = $request->hasFile('image');
             if ($hasfile) {

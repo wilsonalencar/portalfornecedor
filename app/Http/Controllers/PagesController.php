@@ -119,8 +119,17 @@ class PagesController extends Controller
 
     public function forcelogout()
     {
+        Session::flush();
         Session::forget('seid');
         Session::forget('seidLogo');
-        return response()->redirectTo('http://dev.platform');
+        return response()->redirectTo('http://homo-bravoplataforma.bravobpo.com.br');
+    }
+
+    public function forcelogoutall()
+    {
+		Session::flush();
+        Session::forget('seid');
+        Session::forget('seidLogo');
+        return response()->redirectTo('http://homo-bravoplataforma.bravobpo.com.br/login.php');
     }
 }

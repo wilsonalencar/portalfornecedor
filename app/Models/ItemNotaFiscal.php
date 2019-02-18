@@ -23,13 +23,13 @@ class ItemNotaFiscal extends Model
         'descricao',
         'valor_unitario_item',
         'valor_total_item',
-        'aql_iss',
+        'alq_iss',
         'vlr_iss',
         'alq_irrf',
         'vlr_irrf',
-        'aql_outros',
+        'alq_outros',
         'vlr_outros',
-        'aql_inss',
+        'alq_inss',
         'vlr_inss'
     ];
 
